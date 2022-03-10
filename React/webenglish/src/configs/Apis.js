@@ -2,7 +2,10 @@ import axios from "axios"
 
 export let endpoints = {
     "categories": "/categories/",
-    "multiplechoice":"/multiplechoice/"
+    "multiplechoice":"/multiplechoice/",
+    "oauth2-info": "/oauth2-info/",
+    "login":"o/token/",
+    "current-user":"/user/current-user/"
 }
 
 export default axios.create({

@@ -2,7 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="66fc6808-ca49-471c-9d9b-b26b016c68ad" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/React/webenglish/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/React/webenglish/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/React/webenglish/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/React/webenglish/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/React/webenglish/src/configs/Apis.js" beforeDir="false" afterPath="$PROJECT_DIR$/React/webenglish/src/configs/Apis.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/React/webenglish/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/React/webenglish/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/React/webenglish/src/layout/Body.js" beforeDir="false" afterPath="$PROJECT_DIR$/React/webenglish/src/layout/Body.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/React/webenglish/src/layout/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/React/webenglish/src/layout/Header.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/React/webenglish/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/React/webenglish/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebEnglishSystem/WebEnglishSystem/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/WebEnglishSystem/WebEnglishSystem/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
