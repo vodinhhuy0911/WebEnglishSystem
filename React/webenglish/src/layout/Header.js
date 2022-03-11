@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import cookies from "react-cookies";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { logoutUser } from "../ActionCreater/UserCreate";
 import Apis, { endpoints } from "../configs/Apis";
 
 export default function Headers(){
     const [category,setCategory] = useState([])
     const user = useSelector(state => state.user.user)
+    const dispatch = useDispatch()
     
     useEffect(()=>{
         const loadCategory = async()=> {
@@ -16,9 +19,26 @@ export default function Headers(){
         loadCategory()
 
     },[])
+
+    const logout = (event) =>{
+        event.preventDefault()
+        cookies.remove("access_token")
+        cookies.remove("user")
+        dispatch(logoutUser)
+
+    }
+
+
     let path = <Link className="nav-link text-danger" to="/login">Login</Link>
-    if (user != null)
-        path = <Link className="nav-link text-danger" to="/">user.username</Link>
+
+    if (user !== null && user !== undefined)
+    {
+        path = 
+        <>
+        <Link className="nav-link text-danger" to="/">{user.username}</Link>
+        <Link className="nav-link text-danger" onClick={logout}>Logout</Link>
+        </>
+    }
     return (
         <Navbar bg="light" expand="lg">
             <Container>

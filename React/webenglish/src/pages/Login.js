@@ -1,8 +1,10 @@
 
 import { useState } from "react";
 import { Form,Button } from "react-bootstrap";
+import cookies from "react-cookies";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { loginUser } from "../ActionCreater/UserCreate";
 import Apis, { endpoints } from "../configs/Apis";
 
 export default function Login(){
@@ -13,9 +15,9 @@ export default function Login(){
     const history = useHistory()
 
 
-    const loginnn= async (event)=>{ 
+    const login = async (event)=>{ 
         console.info("s")
-        event.prevenDefault()
+        event.preventDefault()
         try{
             let info = await Apis.get(endpoints['oauth2-info'])
             console.info(info)
@@ -29,23 +31,20 @@ export default function Login(){
 
             })
             console.info(res)
-            localStorage.setItem("access_token",res.data.access_token)
+            cookies.save("access_token",res.data.access_token)
 
             let user = await Apis.get(endpoints['current-user'],{
                 headers:{
-                    "Authorization": `Bearer ${localStorage.getItem("access_token")}` 
+                    "Authorization": `Bearer ${cookies.load("access_token")}` 
                 }
 
             })
 
             console.info(user)
 
-            localStorage.setItem("user",user.data)
+            cookies.save("user",user.data)
 
-            dispatch({
-                "type": "USER_LOGIN",
-                "payload": user.data
-            })
+            dispatch(loginUser(user.data))
         history.push("/")
         }catch(err)
         {
@@ -56,7 +55,7 @@ export default function Login(){
     return(
         <div>
         <h1 className="text-center text-danger">Login</h1>
-        <Form  onSubmit={loginnn}>
+        <Form  onSubmit={login}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Username</Form.Label>
                 <Form.Control type="text" placeholder="Username"  
