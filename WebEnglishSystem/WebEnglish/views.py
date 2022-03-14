@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework.decorators import action
+from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework import viewsets, generics, status, permissions
 from rest_framework.views import APIView
@@ -17,6 +18,7 @@ class CategoryViewSet(viewsets.ViewSet,generics.ListAPIView):
 class UserViewsSet(viewsets.ViewSet,generics.CreateAPIView):
     queryset = User.objects.filter(is_active = True)
     serializer_class = UserSerializers
+    # parser_classes = [MultiPartParser,]
 
     def get_permissions(self):
         if self.action =='get_current_user':

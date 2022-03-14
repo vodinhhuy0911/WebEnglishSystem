@@ -29,7 +29,11 @@ export default function Headers(){
     }
 
 
-    let path = <Link className="nav-link text-danger" to="/login">Login</Link>
+    let path = 
+    <>
+    <Link className="nav-link text-danger" to="/login">Login</Link>
+    <Link className="nav-link text-danger" to="/register">Register</Link>
+    </>
 
     if (user !== null && user !== undefined)
     {
