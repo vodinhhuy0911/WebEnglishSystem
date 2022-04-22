@@ -1,0 +1,85 @@
+{% load static %}
+<header class="header-area">
+    <!-- Navbar Area -->
+    <div class="newsbox-main-menu">
+        <div class="classy-nav-container breakpoint-off">
+            <div class="container-fluid">
+                <!-- Menu -->
+                <nav class="classy-navbar justify-content-between" id="newsboxNav">
+
+                    <!-- Nav brand -->
+                    <a href="{%url 'home-page'%}" class="nav-brand"><img width="100px" height="100px" src="{% static 'img/core-img/logo.png' %}" alt=""></a>
+
+                    <!-- Navbar Toggler -->
+                    <div class="classy-navbar-toggler">
+                        <span class="navbarToggler"><span></span><span></span><span></span></span>
+                    </div>
+
+                    <!-- Menu -->
+                    <div class="classy-menu">
+
+                        <!-- Close Button -->
+                        <div class="classycloseIcon">
+                            <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
+                        </div>
+
+                        <!-- Nav Start -->
+                        <div class="classynav">
+                            <ul>
+                                <li><a href="{%url 'home-page'%}">Home</a>
+                                <li><a href="{%url 'quiz'%}">Quiz</a>
+                                <li>
+                                    <a href="#">Category</a>
+                                <ul class="dropdown">
+                                    {% for category in categories %}
+                                    <li><a href="{% url 'category-post' category.id %}">{{category}}</a></li>
+                                    {% endfor %}
+                                </ul>
+                                </li>
+                                <li>
+                                    <a href="#">Excercise</a>
+                                <ul class="dropdown">
+                                    <li><a href="#">Toeic</a></li>
+                                </ul>
+                                </li>
+                                <li>
+                                    <a href="#">Automation</a>
+                                <ul class="dropdown">
+                                    <li><a href="{%url 'incomplete-sentences'%}">Incomplete Sentences</a></li>
+                                    <li><a href="#">Toeic</a></li>
+                                    <li><a href="#">Toeic</a></li>
+                                </ul>
+                                </li>
+                                {% if not user.id %}
+                                <li><a href="{% url 'login-page' %}">Login</a></li>
+                                {% elif user.is_staff == 0%}
+                                    <li>
+                                        <a href="#">Hello, {{user.username}}</a>
+                                        <ul class="dropdown">
+                                            <li><a href="{% url 'profile-page' %}">Profile</a></li>
+                                            <li><a href="{% url 'all-posts' %}">All Posts</a></li>
+                                            <li><a href="{% url 'logout' %}">Logout</a></li>
+                                        </ul>
+                                    </li>
+                                {% else %}
+                                <li>
+                                    <a href="#">Howdy, {{user.username}}</a>
+                                    <ul class="dropdown">
+                                        <li><a href="{% url 'profile-page' %}">Profile</a></li>
+                                        <li><a href="{% url 'new-post' %}">New Post</a></li>
+                                        <li><a href="{% url 'all-posts' %}">All Posts</a></li>
+                                        <li><a href="{% url 'logout' %}">Logout</a></li>
+                                    </ul>
+                                </li>
+                                {% endif %}
+                            </ul>
+
+                        </div>
+                        <!-- Nav End -->
+
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
