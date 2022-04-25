@@ -8,12 +8,23 @@ import json
 from . import models, forms
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
+<<<<<<< HEAD
 from .models import QuizProfile, Question, AttemptedQuestion
 from .forms import UserLoginForm, RegistrationForm
 
 def context_data():
     context = {
         'site_name': 'Simple News Portal',
+=======
+from .models import QuizProfile, AttemptedQuestion
+from .forms import RegistrationForm
+from .source import main
+
+
+def context_data():
+    context = {
+        'site_name': 'Learning English',
+>>>>>>> 4f0a284 (update)
         'page': 'home',
         'page_title': 'News Portal',
         'categories': models.Category.objects.filter(status=1).all(),
@@ -319,7 +330,10 @@ def play(request):
         context = {
             'question': question,
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4f0a284 (update)
         return render(request, 'quiz/play.html', context=context)
 
 
@@ -332,6 +346,7 @@ def submission_result(request, pk=None):
 
     return render(request, 'quiz/submission_result.html', context=context)
 
+<<<<<<< HEAD
 #
 # def login_view(request):
 #     title = "Login"
@@ -343,6 +358,8 @@ def submission_result(request, pk=None):
 #         login(request, user)
 #         return redirect('/user-home')
 #     return render(request, 'quiz/login.html', {"form": form, "title": title})
+=======
+>>>>>>> 4f0a284 (update)
 
 
 def register(request):
@@ -377,6 +394,35 @@ def error_500(request):
 
 #AUTOMATION
 def post_incomplete_sentences(request):
+<<<<<<< HEAD
     data ={}
     return render(request,'automation/incomplete-sentences.html',data)
+=======
+    context = {}
+    context['page_title'] = 'Incomplete Senteces'
+    return render(request,'automation/incomplete-sentences.html',context)
+
+def result_incomplete_senteces(request):
+    context = {}
+    context['page_title'] = 'Incomplete Senteces'
+
+    if request.method == 'POST':
+        question = request.POST.get('question')
+        answerA = request.POST.get('answer_a')
+        answerB = request.POST.get('answer_b')
+        answerC = request.POST.get('answer_c')
+        answerD = request.POST.get('answer_d')
+        print(answerA,answerB,answerC,answerD)
+        inputQuestion = str(question) + "___" + str(answerA) + "___" + str(answerB) + "___" + str(answerC) + "___" + str(answerD)
+        arr = inputQuestion.split('___')
+        arr[4] = arr[4].replace(' \n', '')
+        arr[4] = arr[4].replace('\n', '')
+        # result = main.bigram_MaskedLanguageModel(inputQuestion)
+        # print(inputQuestion)
+        # print(arr)
+        result = main.MaskedLanguageModel(inputQuestion)
+        print(result, chr(65 + result.index(max(result))), arr[result.index(max(result)) + 1])
+        context['result'] = chr(65 + result.index(max(result))), arr[result.index(max(result)) + 1]
+    return render(request, 'automation/result.html', context)
+>>>>>>> 4f0a284 (update)
 

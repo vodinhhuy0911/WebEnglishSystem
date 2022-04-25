@@ -2,7 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="66fc6808-ca49-471c-9d9b-b26b016c68ad" name="Changes" comment="">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+=======
+      <change afterPath="$PROJECT_DIR$/WebEnglish/EnglishSystem/source/main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/WebEnglish/EnglishSystem/templates/automation/result.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebEnglish/EnglishSystem/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/WebEnglish/EnglishSystem/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebEnglish/EnglishSystem/templates/automation/incomplete-sentences.html" beforeDir="false" afterPath="$PROJECT_DIR$/WebEnglish/EnglishSystem/templates/automation/incomplete-sentences.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebEnglish/EnglishSystem/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/WebEnglish/EnglishSystem/templates/home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebEnglish/EnglishSystem/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/WebEnglish/EnglishSystem/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebEnglish/EnglishSystem/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/WebEnglish/EnglishSystem/views.py" afterDir="false" />
+>>>>>>> 4f0a284 (update)
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,6 +23,10 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+<<<<<<< HEAD
+=======
+        <option value="HTML File" />
+>>>>>>> 4f0a284 (update)
         <option value="Python Script" />
       </list>
     </option>
@@ -34,12 +49,30 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+<<<<<<< HEAD
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
+=======
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../NCKH/PhatTrienHeThongHoTroHocTiengAnh" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Subject\NCKH\WebEnglishSystem\WebEnglishSystem\WebEnglish\source" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Subject\NCKH\WebEnglishSystem\WebEnglishSystem\WebEnglish\EnglishSystem" />
+    </key>
+  </component>
+>>>>>>> 4f0a284 (update)
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">

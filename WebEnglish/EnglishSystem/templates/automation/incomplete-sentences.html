@@ -8,7 +8,11 @@
                 </div>
                 <div class="card-body">
                     <div class="container-fluid">
+<<<<<<< HEAD
                         <form id="update-user" method="POST" action="{% url 'update-profile' %}" enctype="multipart/form-data">
+=======
+                        <form id="update-user" method="POST" action="{% url 'result_incomplete_sentences' %}" enctype="multipart/form-data">
+>>>>>>> 4f0a284 (update)
                             {% csrf_token %}
                             <div class="mdc-layout-grid">
                                 <div class="mdc-layout-grid__inner">
@@ -22,6 +26,7 @@
                                     </div>
                                    <div class="form-group mb-3">
                                         <label for="answer_b" class="control-label">Answer B</label>
+<<<<<<< HEAD
                                         <input type="text" class="form-control rounded-0" name="answer_a" id="answer_b"  required="required">
                                     </div>
                                     <div class="form-group mb-3">
@@ -31,6 +36,17 @@
                                     <div class="form-group mb-3">
                                         <label for="answer_d" class="control-label">Answer D</label>
                                         <input type="text" class="form-control rounded-0" name="answer_a" id="answer_d"  required="required">
+=======
+                                        <input type="text" class="form-control rounded-0" name="answer_b" id="answer_b"  required="required">
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="answer_c" class="control-label">Answer C</label>
+                                        <input type="text" class="form-control rounded-0" name="answer_c" id="answer_c"  required="required">
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="answer_d" class="control-label">Answer D</label>
+                                        <input type="text" class="form-control rounded-0" name="answer_d" id="answer_d"  required="required">
+>>>>>>> 4f0a284 (update)
                                     </div>
                                     {% for field in form %} {% for error in field.errors %}
                                     <div class="alert alert-danger my-2">
