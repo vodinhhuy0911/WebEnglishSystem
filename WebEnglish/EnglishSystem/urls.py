@@ -36,11 +36,11 @@ urlpatterns = [
     path('register/', views.register, name='register'),
 
     #QUIZ
-<<<<<<< HEAD
-    path('/automation/incomplete-sentences',views.post_incomplete_sentences,name="incomplete-sentences")
-=======
+
+    path('/automation/incomplete-sentences',views.post_incomplete_sentences,name="incomplete-sentences"),
+
     path('/automation/incomplete-sentences',views.post_incomplete_sentences,name="incomplete-sentences"),
     path('/automation/result_incomplete_sentences',views.result_incomplete_senteces,name="result_incomplete_sentences")
 
->>>>>>> 4f0a284 (update)
+
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

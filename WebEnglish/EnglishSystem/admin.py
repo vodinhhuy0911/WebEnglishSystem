@@ -50,15 +50,15 @@ admin.site.register(Question, QuestionAdmin)
 
 
 #
-<<<<<<< HEAD
+
 # admin.site.register(Choice)
 # admin.site.register(QuizProfile)
 admin.site.register(AttemptedQuestion)
-=======
+
 admin.site.register(Choice)
 # admin.site.register(QuizProfile)
 # admin.site.register(AttemptedQuestion)
->>>>>>> 4f0a284 (update)
+
 admin.site.register(Category)
 admin.site.register(Post,PostAdmin)
 admin.site.register(Comment)
