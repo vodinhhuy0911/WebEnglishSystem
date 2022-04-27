@@ -75,7 +75,9 @@ class QuizProfile(TimeStampedModel):
 
     def get_new_question(self):
         used_questions_pk = AttemptedQuestion.objects.filter(quiz_profile=self).values_list('question__pk', flat=True)
+        # print(used_questions_pk)
         remaining_questions = Question.objects.exclude(pk__in=used_questions_pk)
+
         if not remaining_questions.exists():
             return
         return random.choice(remaining_questions)

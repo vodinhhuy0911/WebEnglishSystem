@@ -13,7 +13,7 @@ from .models import QuizProfile, Question, AttemptedQuestion
 from .forms import UserLoginForm, RegistrationForm
 
 
-from .models import QuizProfile, AttemptedQuestion
+from .models import QuizProfile, AttemptedQuestion, Choice
 from .forms import RegistrationForm
 from .source import main
 
@@ -323,6 +323,16 @@ def play(request):
         if question is not None:
             quiz_profile.create_attempt(question)
 
+
+        # print(ch)
+        # print(answerA, answerB, answerC, answerD)
+        # inputQuestion = str(question) + "___" + str(answerA) + "___" + str(answerB) + "___" + str(
+        #     answerC) + "___" + str(answerD)
+        # arr = inputQuestion.split('___')
+        # arr[4] = arr[4].replace(' \n', '')
+        # arr[4] = arr[4].replace('\n', '')
+        # result = main.bigram_MaskedLanguageModel(inputQuestion)
+
         context = {
             'question': question,
         }
@@ -409,11 +419,12 @@ def result_incomplete_senteces(request):
         arr = inputQuestion.split('___')
         arr[4] = arr[4].replace(' \n', '')
         arr[4] = arr[4].replace('\n', '')
-        # result = main.bigram_MaskedLanguageModel(inputQuestion)
+        result = main.bigram_MaskedLanguageModel(inputQuestion)
+
         # print(inputQuestion)
         # print(arr)
-        result = main.MaskedLanguageModel(inputQuestion)
-        print(result, chr(65 + result.index(max(result))), arr[result.index(max(result)) + 1])
+        # result = main.MaskedLanguageModel(inputQuestion)
+        # print(result, chr(65 + result.index(max(result))), arr[result.index(max(result)) + 1])
         context['result'] = chr(65 + result.index(max(result))), arr[result.index(max(result)) + 1]
     return render(request, 'automation/result.html', context)
 

@@ -1,3 +1,5 @@
+import os
+
 import nltk
 from nltk import word_tokenize
 from nltk.util import ngrams
@@ -9,8 +11,12 @@ import numpy as np
 import pickle
 
 def getDataBigram():
-    fr = open("traningUnigram_Ver2.txt", "r", encoding="utf-8")
-    result = fr.read()
+    module_dir = os.path.dirname(__file__)
+    file_path = os.path.join(module_dir, 'traningUnigram_Ver2.txt')  # full path to text.
+    data_file = open(file_path, 'r',encoding="utf-8")
+    result = data_file.read()
+    # fr = open("traningUnigram_Ver2.txt", "r", encoding="utf-8")
+    # result = fr.read()
     resultUni = {}
     temp = result.replace("Counter({('", "'")
     temp = temp.replace("})", "")
@@ -21,11 +27,14 @@ def getDataBigram():
         temp1 = i.split(": ")
         temp2 = str(temp1[0]).replace("'", "")
         resultUni[temp2] = int(temp1[1])
-    fr.close()
+    # fr.close()
     #########################
 
-    fr1 = open("traningBigram_Ver2.txt", "r", encoding="utf-8")
-    result1 = fr1.read()
+    module_dir2 = os.path.dirname(__file__)
+    file_path2 = os.path.join(module_dir2, 'traningBigram_Ver2.txt')  # full path to text.
+    data_file2 = open(file_path2, 'r', encoding="utf-8")
+
+    result1 = data_file2.read()
     resultBi = {}
     temp = result1.replace("Counter({('", "'")
     temp = temp.replace("})", "")
@@ -35,7 +44,7 @@ def getDataBigram():
         temp0 = "(" + i
         temp3 = temp0.split(": ")
         resultBi[str(temp3[0] + ")")] = int(temp3[1])
-    fr1.close()
+    # fr1.close()
     return resultUni, resultBi
 
 def bigram(inputQuestion):
@@ -107,6 +116,8 @@ def bigram_MaskedLanguageModel(inputQuestion):
     resultMasked = MaskedLanguageModel(inputQuestion)
     resultOutput = [0.0, 0.0, 0.0, 0.0]
     landa = 0.9
+    print(resultFinal)
+    print(resultMasked)
     for viTriDapAn in range(0, 4):
         resultOutput[viTriDapAn] = (resultFinal[viTriDapAn] * (1.0 - landa)) + (resultMasked[viTriDapAn] * (landa))
     return resultOutput
