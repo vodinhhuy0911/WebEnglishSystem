@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %} Let's Quiz | Submission Result {% endblock title %}
+{% block content %}
+<div class="container">
+	<div class="jumbotron my-4">
+
+	   	<h3 class="text-info">{{ attempted_question.question.html|safe }}</h3>
+
+		<p>
+		    <strong>Your score: </strong>
+		    {{ result }}
+		</p>
+		<a class="btn btn-info" href="{% url 'quiz' %}">Home</a>
+		<a class="btn btn-info" href="{% url 'test' %}">Next question</a>
+	</div>
+</div>
+
+{% endblock content %}

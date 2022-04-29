@@ -34,7 +34,8 @@ urlpatterns = [
     path('leaderboard/', views.leaderboard, name='leaderboard'),
     path('submission-result/<int:pk>/', views.submission_result, name='submission_result'),
     path('register/', views.register, name='register'),
-
+    path('test/',views.test,name="test"),
+    path('result/',views.test,name="result"),
     #QUIZ
 
     path('/automation/incomplete-sentences',views.post_incomplete_sentences,name="incomplete-sentences"),

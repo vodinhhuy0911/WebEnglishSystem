@@ -109,6 +109,10 @@ def MaskedLanguageModel(inputQuestion):
     return resultMasked
 
 def bigram_MaskedLanguageModel(inputQuestion):
+    question = inputQuestion
+    a = question.split('___')
+    a[4] = a[4].replace(' \n', '')
+    a[4] = a[4].replace('\n', '')
     resultBigram = bigram(inputQuestion)
     resultFinal = [0, 0, 0, 0]
     for r in range(0, 4):
@@ -116,9 +120,13 @@ def bigram_MaskedLanguageModel(inputQuestion):
     resultMasked = MaskedLanguageModel(inputQuestion)
     resultOutput = [0.0, 0.0, 0.0, 0.0]
     landa = 0.9
-    print(resultFinal)
-    print(resultMasked)
     for viTriDapAn in range(0, 4):
         resultOutput[viTriDapAn] = (resultFinal[viTriDapAn] * (1.0 - landa)) + (resultMasked[viTriDapAn] * (landa))
-    return resultOutput
+    for viTriDapAn in range(0, 4):
+        resultOutput[viTriDapAn] = resultOutput[viTriDapAn]/ sum(resultOutput) *100
+
+    percent = []
+    for viTriDapAn in range(0,4):
+        percent.append(a[viTriDapAn+1]+": " +str(round(resultOutput[viTriDapAn],4)) + "%")
+    return percent
 

@@ -1,3 +1,5 @@
+import random
+
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -301,10 +303,9 @@ def leaderboard(request):
 @login_required()
 def play(request):
     quiz_profile, created = QuizProfile.objects.get_or_create(user=request.user)
-
     if request.method == 'POST':
         question_pk = request.POST.get('question_pk')
-
+        # print(question_pk)
         attempted_question = quiz_profile.attempts.select_related('question').get(question__pk=question_pk)
 
         choice_pk = request.POST.get('choice_pk')
@@ -322,16 +323,6 @@ def play(request):
         question = quiz_profile.get_new_question()
         if question is not None:
             quiz_profile.create_attempt(question)
-
-
-        # print(ch)
-        # print(answerA, answerB, answerC, answerD)
-        # inputQuestion = str(question) + "___" + str(answerA) + "___" + str(answerB) + "___" + str(
-        #     answerC) + "___" + str(answerD)
-        # arr = inputQuestion.split('___')
-        # arr[4] = arr[4].replace(' \n', '')
-        # arr[4] = arr[4].replace('\n', '')
-        # result = main.bigram_MaskedLanguageModel(inputQuestion)
 
         context = {
             'question': question,
@@ -407,7 +398,6 @@ def post_incomplete_sentences(request):
 def result_incomplete_senteces(request):
     context = {}
     context['page_title'] = 'Incomplete Senteces'
-
     if request.method == 'POST':
         question = request.POST.get('question')
         answerA = request.POST.get('answer_a')
@@ -419,13 +409,41 @@ def result_incomplete_senteces(request):
         arr = inputQuestion.split('___')
         arr[4] = arr[4].replace(' \n', '')
         arr[4] = arr[4].replace('\n', '')
-        result = main.bigram_MaskedLanguageModel(inputQuestion)
+        context['result'] = main.bigram_MaskedLanguageModel(inputQuestion)
 
-        # print(inputQuestion)
-        # print(arr)
-        # result = main.MaskedLanguageModel(inputQuestion)
-        # print(result, chr(65 + result.index(max(result))), arr[result.index(max(result)) + 1])
-        context['result'] = chr(65 + result.index(max(result))), arr[result.index(max(result)) + 1]
     return render(request, 'automation/result.html', context)
 
+
+@login_required()
+def test(request):
+    if request.method == 'POST':
+        question_pk = request.POST.getlist('question_pk')
+        result = 0.0
+        for pk in question_pk:
+            choice_pk = request.POST.get('choice_pk-'+str(pk))
+            is_answer = Choice.objects.get(pk=choice_pk)
+            if is_answer.is_correct == True:
+                mask = Question.objects.get(pk=pk)
+                result += float(mask.maximum_marks)
+        context = {
+            'question_pk':question_pk,
+            'result':result
+        }
+        return render(request,'quiz/result.html',context)
+    else:
+        list_question = list(Question.objects.all())
+        random.shuffle(list_question)
+        result = []
+        for question in list_question[:1]:
+            c = list(Choice.objects.filter(question = question))
+            input = question.html+ "___" + c[0].html+ "___" + c[1].html+ "___"+ c[2].html+ "___"+ c[3].html
+            # result.append("a")
+            result.append(main.bigram_MaskedLanguageModel(input))
+            # list_percent =
+        context = {
+            'list_question': zip(list_question[:1],result)
+            # 'input':listInput
+        }
+        # print(context["input"][0])
+        return render(request, 'quiz/test.html', context=context)
 
