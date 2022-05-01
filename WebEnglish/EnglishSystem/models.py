@@ -43,6 +43,12 @@ class Comment(models.Model):
     def __str__(self):
         return f"{self.name} - {self.post.title}"
 
+class Paragraph(TimeStampedModel):
+    content = models.TextField()
+
+    def __str__(self):
+        return self.content
+
 
 class Question(TimeStampedModel):
     ALLOWED_NUMBER_OF_CORRECT_CHOICES = 1
@@ -50,7 +56,7 @@ class Question(TimeStampedModel):
     html = models.TextField(_('Question Text'))
     is_published = models.BooleanField(_('Has been published?'), default=False, null=False)
     maximum_marks = models.DecimalField(_('Maximum Marks'), default=4, decimal_places=2, max_digits=6)
-
+    paragraph = models.ForeignKey(Paragraph, on_delete = models.CASCADE, null=True, blank=True)
     def __str__(self):
         return self.html
 

@@ -27,7 +27,14 @@
                         <div class="classynav">
                             <ul>
                                 <li><a href="{%url 'home-page'%}">Home</a>
-                                <li><a href="{%url 'test'%}">Test</a>
+                                 <li>
+                                    <a href="#">Test</a>
+                                <ul class="dropdown">
+                                    <li><a href="{%url 'test'%}">Incomplete Sentences</a></li>
+                                    <li><a href="{%url 'test-reading-comprehension'%}">Reading</a></li>
+                                    <li><a href="#">Toeic</a></li>
+                                </ul>
+                                </li>
                                 <li><a href="{%url 'quiz'%}">Quiz</a>
                                 <li>
                                     <a href="#">Category</a>
@@ -47,7 +54,7 @@
                                     <a href="#">Automation</a>
                                 <ul class="dropdown">
                                     <li><a href="{%url 'incomplete-sentences'%}">Incomplete Sentences</a></li>
-                                    <li><a href="#">Toeic</a></li>
+                                    <li><a href="{%url 'reading-comprehension'%}">Reading</a></li>
                                     <li><a href="#">Toeic</a></li>
                                 </ul>
                                 </li>

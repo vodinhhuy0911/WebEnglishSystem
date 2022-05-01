@@ -35,12 +35,14 @@ urlpatterns = [
     path('submission-result/<int:pk>/', views.submission_result, name='submission_result'),
     path('register/', views.register, name='register'),
     path('test/',views.test,name="test"),
+    path('test-reading-comprehension',views.test_reading_comprehension,name='test-reading-comprehension'),
     path('result/',views.test,name="result"),
     #QUIZ
 
     path('/automation/incomplete-sentences',views.post_incomplete_sentences,name="incomplete-sentences"),
 
-    path('/automation/incomplete-sentences',views.post_incomplete_sentences,name="incomplete-sentences"),
+    path('/automation/reading-comprehension',views.auto_incomplete_sentences,name="reading-comprehension"),
+    path('/automation/result-reading-comprehension',views.result_reading_comprehension,name="result-reading-comprehension"),
     path('/automation/result_incomplete_sentences',views.result_incomplete_senteces,name="result_incomplete_sentences")
 
 

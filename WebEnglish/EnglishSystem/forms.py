@@ -111,7 +111,7 @@ class saveComment(forms.ModelForm):
 class QuestionForm(forms.ModelForm):
     class Meta:
         model = Question
-        fields = ['html', 'is_published']
+        fields = ['html', 'is_published','paragraph']
         widgets = {
             'html': forms.Textarea(attrs={'rows': 3, 'cols': 80}),
         }

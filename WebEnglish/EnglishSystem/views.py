@@ -11,13 +11,13 @@ from . import models, forms
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 
-from .models import QuizProfile, Question, AttemptedQuestion
+from .models import QuizProfile, Question, AttemptedQuestion, Paragraph
 from .forms import UserLoginForm, RegistrationForm
 
 
 from .models import QuizProfile, AttemptedQuestion, Choice
 from .forms import RegistrationForm
-from .source import main
+from .source import main, reading_compre
 
 
 def context_data():
@@ -388,8 +388,8 @@ def error_500(request):
 #AUTOMATION
 def post_incomplete_sentences(request):
 
-    data ={}
-    return render(request,'automation/incomplete-sentences.html',data)
+    # data ={}
+    # return render(request,'automation/incomplete-sentences.html',data)
 
     context = {}
     context['page_title'] = 'Incomplete Senteces'
@@ -447,3 +447,63 @@ def test(request):
         # print(context["input"][0])
         return render(request, 'quiz/test.html', context=context)
 
+
+def auto_incomplete_sentences(request):
+
+    # data ={}
+    # return render(request,'automation/incomplete-sentences.html',data)
+
+    context = {}
+    context['page_title'] = 'Reading Comprehension'
+    return render(request,'automation/reading-comprehension.html',context)
+
+def result_reading_comprehension(request):
+    context = {}
+    context['page_title'] = 'Reading Comprehension'
+    para = request.POST.get('paragraph')
+    question = request.POST.get('question')
+    answerA = request.POST.get('answer_a')
+    answerB = request.POST.get('answer_b')
+    answerC = request.POST.get('answer_c')
+    answerD = request.POST.get('answer_d')
+    data_input = str(para) + "\n \n Questions:\n" + str(question) + "__" + str(answerA) + "__" + str(answerB) + "__" + str(answerC) + "__" + str(answerD)
+    context['result'] = reading_compre.reading_comprehension(data_input)
+    return render(request, 'automation/result.html', context)
+
+
+
+@login_required()
+def test_reading_comprehension(request):
+    # if request.method == 'POST':
+    #     question_pk = request.POST.getlist('question_pk')
+    #     result = 0.0
+    #     for pk in question_pk:
+    #         choice_pk = request.POST.get('choice_pk-'+str(pk))
+    #         is_answer = Choice.objects.get(pk=choice_pk)
+    #         if is_answer.is_correct == True:
+    #             mask = Question.objects.get(pk=pk)
+    #             result += float(mask.maximum_marks)
+    #     context = {
+    #         'question_pk':question_pk,
+    #         'result':result
+    #     }
+    #     return render(request,'quiz/test_reading_comprehension.html',context)
+    # else:
+        list_para = list(Paragraph.objects.all())
+        random.shuffle(list_para)
+        result = []
+        for para in list_para[:1]:
+
+            list_question = list(Question.objects.filter(paragraph = para))
+            for question in list_question:
+                c = list(Choice.objects.filter(question = question))
+                # input = question.html+ "__" + c[0].html+ "__" + c[1].html+ "__"+ c[2].html+ "__"+ c[3].html
+                # result.append("a")
+                # result.append(reading_compre.reading_comprehension(input))
+            # list_percent =
+        context = {
+            'list_para': zip(list_para[:1])
+            # 'input':listInput
+        }
+        # print(context["input"][0])
+        return render(request, 'quiz/test_reading_comprehension.html', context=context)

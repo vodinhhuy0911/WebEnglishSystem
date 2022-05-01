@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import  Category, Post,Comment,Choice,Question,QuizProfile,AttemptedQuestion
+from .models import Category, Post, Comment, Choice, Question, QuizProfile, AttemptedQuestion, Paragraph
 from django import forms
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
@@ -58,7 +58,7 @@ admin.site.register(AttemptedQuestion)
 admin.site.register(Choice)
 admin.site.register(QuizProfile)
 # admin.site.register(AttemptedQuestion)
-
+admin.site.register(Paragraph)
 admin.site.register(Category)
 admin.site.register(Post,PostAdmin)
 admin.site.register(Comment)
