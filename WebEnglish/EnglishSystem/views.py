@@ -458,6 +458,15 @@ def auto_incomplete_sentences(request):
     context['page_title'] = 'Reading Comprehension'
     return render(request,'automation/reading-comprehension.html',context)
 
+def auto_incomplete_text(request):
+
+    # data ={}
+    # return render(request,'automation/incomplete-sentences.html',data)
+
+    context = {}
+    context['page_title'] = 'Incomplete Text'
+    return render(request,'automation/reading-comprehension.html',context)
+
 def result_reading_comprehension(request):
     context = {}
     context['page_title'] = 'Reading Comprehension'
@@ -493,7 +502,7 @@ def test_reading_comprehension(request):
         }
         return render(request,'quiz/result.html',context)
     else:
-        list_para = list(Paragraph.objects.all())
+        list_para = list(Paragraph.objects.filter(type='1'))
         random.shuffle(list_para)
         result = []
         list_question = []
@@ -508,6 +517,49 @@ def test_reading_comprehension(request):
         context = {
             'list_para': (list_para[:1]),
             'list_question': zip(list_question,result)
+        }
+        # print(context["input"][0])
+        return render(request, 'quiz/test_reading_comprehension.html', context=context)
+
+
+
+
+@login_required()
+def test_incomplete_text(request):
+    if request.method == 'POST':
+        paragraph_pk = request.POST.get('paragraph_pk')
+        question = request.POST.getlist('question_pk')
+        print(question)
+        result = 0.0
+        for id in question:
+            choice_pk = request.POST.get('choice_pk-'+str(id))
+            print(choice_pk)
+            is_answer = Choice.objects.get(pk=choice_pk)
+            if is_answer.is_correct == True:
+                mask = Question.objects.get(pk=id)
+                result += float(mask.maximum_marks)
+        context = {
+            'result':result,
+            'link': ' /test-incomplete-text'
+        }
+        return render(request,'quiz/result.html',context)
+    else:
+        list_para = list(Paragraph.objects.filter(type='2'))
+        random.shuffle(list_para)
+        result = []
+        list_question = []
+        for para in list_para[:1]:
+            list_question = list(Question.objects.filter(paragraph = para))
+            # for question in list_question:
+            #     c = list(Choice.objects.filter(question = question))
+            #     input = para.content + "\n\nQuestions:\n" + question.html+ "__" + c[0].html+ "__" + c[1].html+ "__"+ c[2].html+ "__"+ c[3].html
+            #     result.append(reading_compre.reading_comprehension(input))
+            # list_percent =
+        print(list_para)
+        print(list_question)
+        context = {
+            'list_para': (list_para[:1]),
+            'list_question': list_question
         }
         # print(context["input"][0])
         return render(request, 'quiz/test_reading_comprehension.html', context=context)

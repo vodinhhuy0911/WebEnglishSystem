@@ -36,6 +36,7 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('test/',views.test,name="test"),
     path('test-reading-comprehension',views.test_reading_comprehension,name='test-reading-comprehension'),
+    path('test-incomplete-text',views.test_incomplete_text,name='test-incomplete-text'),
     path('result/',views.test,name="result"),
     #QUIZ
 

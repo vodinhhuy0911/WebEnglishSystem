@@ -18,7 +18,7 @@
       <p class = "big-box yellow-box">{{paragraph.content|safe}} </p>
       <form class="form" action="" method="post">
 <input type="hidden" name="paragraph_pk" value="{{ paragraph.pk }}">
-        {%for question,result in list_question %}
+        {%for question in list_question %}
 
             {% csrf_token %}
 
@@ -37,7 +37,7 @@
 
             {% endfor %}
 
-            <p   style="display: none;" id ="show-answer-{{question.pk}}" class ="hide"> {{ result}}</p>
+<!--            <p   style="display: none;" id ="show-answer-{{question.pk}}" class ="hide"> {{ result}}</p>-->
             <div
               onclick="show({{question.pk}})"   id="show-percent-answer"  class="btn btn-info btn-sm">Help</div>
             {% endfor %}
