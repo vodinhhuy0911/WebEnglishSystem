@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'crispy_forms',
-    'EnglishSystem.apps.EnglishsystemConfig'
+    'EnglishSystem.apps.EnglishsystemConfig',
+    'django.contrib.humanize',
 
 ]
 

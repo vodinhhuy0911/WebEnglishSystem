@@ -1,0 +1,75 @@
+{% extends "layouts/base.html" %} {% load humanize %} {% load customfilter %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-5 col-md-8 col-sm-12 col-xs-12 card card-default rounded-0 shadow border border-dark">
+        <div class="card-body">
+            <div class="container-fluid">
+                <div class="position-relative">
+                    <div class="px-2 pt-4 pb-1 border border-gray-200">
+                        <div id="test"></div>
+                        <div id="chat-holder" class="" style="max-height:500px; overflow:auto">
+<!--                            <div class="text-center text-muted d-none" id="load_more">Loading more old messages</div>-->
+<!--                            <div class="text-center text-muted d-none" id="no_load">You Have Reach the oldest message</div>-->
+                        </div>
+                    </div>
+                </div>
+                <div id="form-field">
+                    <form action="" method="POST" id="form-message">
+                        {% csrf_token %}
+                        <input type="hidden" name="username" value="{{ request.session.logged_user }}">
+                        <div class="d-flex w-100 justify-content-center align-items-center">
+                            <div class="col-auto flex-shrink-1 flex-grow-1 p-1">
+                                <textarea name="message" id="message" cols="30" rows="1" autofocus class="form-control rounded-0" required="required" placeholder="Write your Message Here"></textarea>
+                            </div>
+                            <div class="col-auto h-100 p-1">
+                                <button class="btn btn-primary rounded-0 h-100" title="send"><i class="fa fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br>
+<script>
+myInterval = setInterval(function(){
+        $.ajax({
+            type: 'GET',
+            url : "/getMessages/{{username}}/",
+            success: function(data){
+                $("#chat-holder").empty();
+                for (var key in data)
+                    for(var i in data[key].chats){
+                        var temp="<div class='chat'><b>"+ data[key].chats[i].split(":")[0] +":</b>" + data[key].chats[i].split(":")[1]+"</div>";
+                        $("#chat-holder").append(temp);
+                    }
+            },
+            error: function(response){
+                alert('An error occurred')
+            }
+        });
+    }, 500);
+$(document).ready(function(){
+    myInterval
+})
+
+$(document).on('submit','#form-message',function(e){
+    e.preventDefault();
+    $.ajax({
+      type:'POST',
+      url:'/send/',
+      data:{
+          username:$('#username').val(),
+          message:$('#message').val(),
+          csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+      },
+      success: function(){
+      }
+    });
+    document.getElementById('message').value = ''
+  });
+</script>
+
+{% endblock content %}

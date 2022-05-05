@@ -3,14 +3,15 @@ import random
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from django.contrib.auth.models import User
 import json
 from . import models, forms
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
-
+from pubnub.pubnub import PubNub
+from pubnub.pnconfiguration import PNConfiguration
 from .models import QuizProfile, Question, AttemptedQuestion, Paragraph
 from .forms import UserLoginForm, RegistrationForm
 
@@ -19,7 +20,7 @@ from .models import QuizProfile, AttemptedQuestion, Choice
 from .forms import RegistrationForm
 from .source import main, reading_compre, incom_text
 
-
+temp = []
 def context_data():
     context = {
         'site_name': 'Learning English',
@@ -39,6 +40,26 @@ def home(request):
     context['latest_top'] = posts[:2]
     context['latest_bottom'] = posts[2:12]
     print(posts)
+    try:
+        user_name = request.user.username
+        # chatroom = user_name + str(request.user.id)
+        chatroom = "Test1"
+        pnconfig = PNConfiguration()
+        pnconfig.publish_key = 'pub-c-f64ce868-88ba-4540-8cc2-68e2639c0a99'
+        pnconfig.subscribe_key = 'sub-c-925f0596-c5e1-11ec-b36c-a6fdca316470'
+        pnconfig.uuid = user_name
+        pn = PubNub(pnconfig)
+        channel = chatroom
+
+        def my_fetch_messages_callback(envelope, status):
+            temp1 = []
+            for msg in envelope.channels[channel]:
+                temp1.append(msg.message["user_name"] + ": " + str(msg.message["message"]))
+            global temp
+            temp = temp1
+        pn.fetch_messages().channels(channel).count(10).end(15343325004275466).pn_async(my_fetch_messages_callback)
+    except AssertionError:
+        pass
     return render(request, 'home.html', context)
 
 
@@ -577,3 +598,77 @@ def result_incomplete_text(request):
         answerB) + "__" + str(answerC) + "__" + str(answerD)
     context['result'] = incom_text.incomplete_text(data_input)
     return render(request, 'automation/result.html', context)
+
+def my_publish_callback(envelope, status):
+    if not status.is_error():
+        pass
+    else:
+        pass
+
+
+@login_required()
+def chat(request):
+    user_name = request.user.username
+    # chatroom = user_name + str(request.user.id)
+    chatroom = "Test1"
+    pnconfig = PNConfiguration()
+    pnconfig.publish_key = 'pub-c-f64ce868-88ba-4540-8cc2-68e2639c0a99'
+    pnconfig.subscribe_key = 'sub-c-925f0596-c5e1-11ec-b36c-a6fdca316470'
+    pnconfig.uuid = user_name
+    pn = PubNub(pnconfig)
+    channel = chatroom
+
+    def my_fetch_messages_callback(envelope, status):
+        temp1 = []
+        for msg in envelope.channels[channel]:
+            temp1.append(msg.message["user_name"] + ": " + str(msg.message["message"]))
+        global temp
+        temp = temp1
+    pn.fetch_messages().channels(channel).count(10).end(15343325004275466).pn_async(my_fetch_messages_callback)
+    global temp
+    context = {
+        'username':user_name,
+        'chats': temp
+    }
+    return render(request, 'chat/chat_home.html', context)
+
+
+def send(request):
+    user_name = request.user.username
+    # chatroom = user_name + str(request.user.id)
+    chatroom = "Test1"
+    pnconfig = PNConfiguration()
+    pnconfig.publish_key = 'pub-c-f64ce868-88ba-4540-8cc2-68e2639c0a99'
+    pnconfig.subscribe_key = 'sub-c-925f0596-c5e1-11ec-b36c-a6fdca316470'
+    pnconfig.uuid = user_name
+    pn = PubNub(pnconfig)
+    channel = chatroom
+
+    pn.subscribe().channels(channel).execute()
+    message = request.POST.get('message')
+    msg_object = dict(user_name=user_name, message=message)
+    pn.publish().channel(channel).message(msg_object).pn_async(my_publish_callback)
+    update_messages(user_name, message)
+    context = {
+        'username': user_name,
+        'chats': temp
+    }
+    return render(request, 'chat/chat_home.html', context)
+
+
+def get_messages(request, user_name):
+    global temp
+    context = {
+        'username':user_name,
+        'chats': temp
+    }
+    return JsonResponse({"messages":context})
+
+
+def update_messages(user_name, new_messages):
+    global temp
+    temp1 = temp
+    for i in range(0, len(temp1) - 1):
+        temp1[i] = temp1[i + 1]
+    temp1[len(temp1) - 1] = user_name + ": " + str(new_messages)
+    temp = temp1

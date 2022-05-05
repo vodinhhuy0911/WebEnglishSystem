@@ -48,5 +48,7 @@ urlpatterns = [
     path('/automation/result_incomplete_sentences',views.result_incomplete_senteces,name="result_incomplete_sentences"),
     # path('/automation/result-incomplete-text',views.result_incomplete_text,name="result-incomplete-text")
 
-
+    path('chat/',views.chat,name="chat-page"),
+    path('send/',views.send,name="send"),
+    path('getMessages/<str:user_name>/', views.get_messages, name='getMessages'),
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
