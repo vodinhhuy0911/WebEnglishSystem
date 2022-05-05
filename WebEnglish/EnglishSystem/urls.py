@@ -41,10 +41,12 @@ urlpatterns = [
     #QUIZ
 
     path('/automation/incomplete-sentences',views.post_incomplete_sentences,name="incomplete-sentences"),
+    # path('/automation/incomplete-text',views.auto_incomplete_text,name="incomplete-text"),
 
     path('/automation/reading-comprehension',views.auto_incomplete_sentences,name="reading-comprehension"),
     path('/automation/result-reading-comprehension',views.result_reading_comprehension,name="result-reading-comprehension"),
-    path('/automation/result_incomplete_sentences',views.result_incomplete_senteces,name="result_incomplete_sentences")
+    path('/automation/result_incomplete_sentences',views.result_incomplete_senteces,name="result_incomplete_sentences"),
+    # path('/automation/result-incomplete-text',views.result_incomplete_text,name="result-incomplete-text")
 
 
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

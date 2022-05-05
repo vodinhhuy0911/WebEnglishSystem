@@ -1,13 +1,20 @@
+import os
+
 import nltk
 from transformers import pipeline
 nlp = pipeline('fill-mask',top_k = 20)
 from nltk import tokenize
 from nltk.util import ngrams
 from collections import Counter
+from transformers import pipeline
 
-def getDataBigram(pathUnigram, pathBigram):
-    fr = open(pathUnigram, "r", encoding="utf-8")
-    result = fr.read()
+def getDataBigram():
+    module_dir = os.path.dirname(__file__)
+    file_path = os.path.join(module_dir, 'traningUnigram_Ver2.txt')  # full path to text.
+    data_file = open(file_path, 'r',encoding="utf-8")
+    result = data_file.read()
+    # fr = open("traningUnigram_Ver2.txt", "r", encoding="utf-8")
+    # result = fr.read()
     resultUni = {}
     temp = result.replace("Counter({('", "'")
     temp = temp.replace("})", "")
@@ -18,11 +25,14 @@ def getDataBigram(pathUnigram, pathBigram):
         temp1 = i.split(": ")
         temp2 = str(temp1[0]).replace("'", "")
         resultUni[temp2] = int(temp1[1])
-    fr.close()
+    # fr.close()
     #########################
 
-    fr1 = open(pathBigram, "r", encoding="utf-8")
-    result1 = fr1.read()
+    module_dir2 = os.path.dirname(__file__)
+    file_path2 = os.path.join(module_dir2, 'traningBigram_Ver2.txt')  # full path to text.
+    data_file2 = open(file_path2, 'r', encoding="utf-8")
+
+    result1 = data_file2.read()
     resultBi = {}
     temp = result1.replace("Counter({('", "'")
     temp = temp.replace("})", "")
@@ -32,11 +42,11 @@ def getDataBigram(pathUnigram, pathBigram):
         temp0 = "(" + i
         temp3 = temp0.split(": ")
         resultBi[str(temp3[0] + ")")] = int(temp3[1])
-    fr1.close()
+    # fr1.close()
     return resultUni, resultBi
 
-def bigram(inputQuestion,pathUnigram, pathBigram):
-    frequenciesUnigramInContent, frequenciesBigramInContent = getDataBigram(pathUnigram, pathBigram)
+def bigram(inputQuestion):
+    frequenciesUnigramInContent, frequenciesBigramInContent = getDataBigram()
     frequenciesUnigramInContent = Counter(frequenciesUnigramInContent)
     frequenciesBigramInContent = Counter(frequenciesBigramInContent)
     contentQuestion = inputQuestion
@@ -68,18 +78,11 @@ def bigram(inputQuestion,pathUnigram, pathBigram):
         i += 1
     return  result
 
-
-
-
-for number in range(3,4):
-    fr = open("../../Data/Câu hỏi/Incomplete/Đoạn/"+str(number)+".txt","r",encoding="utf-8")
-    inputQuestion = fr.read()
-    # print(inputQuestion)
+def incomplete_text(inputQuestion):
+    result_incomplete_text = []
+    resultFinal = [0.0,0.0,0.0,0.0]
     content = inputQuestion.split('Questions:')[0]
     listAnswer = inputQuestion.split('Questions:')[1].split("\n")
-
-
-
     del listAnswer[0]
     print(content)
     print((listAnswer))
@@ -107,7 +110,7 @@ for number in range(3,4):
         del a[1]
         data = ''
         for i in a:
-            data += i +'__'
+            data += i +'___'
         print(data)
         # a = question.split('__')
         a[4] = a[4].replace(' \n', '')
@@ -124,7 +127,7 @@ for number in range(3,4):
         arr = nlp(a[0])
         flag = False
         pos = 0
-        max = 0
+        scr_max = 0
         resultMasked = [0,0,0,0]
         result = ""
         # print(arr)
@@ -133,20 +136,23 @@ for number in range(3,4):
             x = x.__getitem__('token_str')
             x = str(x).strip()
             if x in a:
-                resultMasked[a.index(x)-1] = score
-                if score > max:
+
+                if score > scr_max:
                     min = score
                     result = x
+                    resultMasked[a.index(x) - 1] = score
             pos += 1
-        # print(resultMasked)
-        # print(a)
-        try:
-            content = content.replace(indexQuestion,result)
-            # print("Acc:", score)
-            # print(content)
-            print(chr(65 + a.index((result))-1),result)
-            # fw.write(chr(65 + a.index((result))-1))
-        except:
-            bigram()
-    fr.close()
-# fw.close()
+
+        resultBigram = bigram(data)
+        print(resultBigram)
+        print(resultMasked)
+        for viTri in range(0,4):
+            resultFinal[viTri] = resultBigram[viTri]*0.1 + resultMasked[viTri] * 0.9
+        result_incomplete_text.append(resultFinal)
+        result = a[resultFinal.index(max(resultFinal))+1]
+
+        print(chr(65 +resultFinal.index(max(resultFinal))),a[resultFinal.index(max(resultFinal))+1])
+        print(resultFinal)
+        content = content.replace(indexQuestion, result)
+    return result_incomplete_text
+

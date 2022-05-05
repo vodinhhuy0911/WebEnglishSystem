@@ -1,10 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'layouts/base.html' %}{% load static %}{% block content %}
+<div class="container-fluid mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
+            <div class="card card-default rounded-0 shadow">
+                <div class="card-header">
+                    <h4 class="card-title"><b>Incomplete Text</b></h4>
+                </div>
+                <div class="card-body">
+                    <div class="container-fluid">
 
-</body>
-</html>
+                        <form id="update-user" method="POST" action="{% url 'result-reading-text' %}" enctype="multipart/form-data">
+
+                            {% csrf_token %}
+                            <div class="mdc-layout-grid">
+                                <div class="mdc-layout-grid__inner">
+                                    <div class="form-group mb-3">
+                                        <label for="paragraph" class="control-label">Paragraph</label>
+                                        <textarea class="form-control rounded-0" rows="15" name="paragraph" id="paragraph"  required="required"></textarea>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="question" class="control-label">Question</label>
+                                        <textarea class="form-control rounded-0" name="question" id="question"  required="required"></textarea>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="answer_a" class="control-label">Answer A</label>
+                                        <input type="text" class="form-control rounded-0" name="answer_a" id="answer_a"  required="required">
+                                    </div>
+                                   <div class="form-group mb-3">
+                                        <label for="answer_b" class="control-label">Answer B</label>
+
+                                        <input type="text" class="form-control rounded-0" name="answer_b" id="answer_b"  required="required">
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="answer_c" class="control-label">Answer C</label>
+                                        <input type="text" class="form-control rounded-0" name="answer_c" id="answer_c"  required="required">
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="answer_d" class="control-label">Answer D</label>
+                                        <input type="text" class="form-control rounded-0" name="answer_d" id="answer_d"  required="required">
+                                    </div>
+
+
+                                    <div class="form-group mb-3">
+                                        <div class="d-flex w-100 justify-content-end">
+                                            <button class="btn btn-sm rounded-0 btn-primary col-4">
+                                                    Submit
+                                                </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -17,7 +17,7 @@ from .forms import UserLoginForm, RegistrationForm
 
 from .models import QuizProfile, AttemptedQuestion, Choice
 from .forms import RegistrationForm
-from .source import main, reading_compre
+from .source import main, reading_compre, incom_text
 
 
 def context_data():
@@ -563,3 +563,17 @@ def test_incomplete_text(request):
         }
         # print(context["input"][0])
         return render(request, 'quiz/test_reading_comprehension.html', context=context)
+
+def result_incomplete_text(request):
+    context = {}
+    context['page_title'] = 'Incomplete Text'
+    para = request.POST.get('paragraph')
+    question = request.POST.get('question')
+    answerA = request.POST.get('answer_a')
+    answerB = request.POST.get('answer_b')
+    answerC = request.POST.get('answer_c')
+    answerD = request.POST.get('answer_d')
+    data_input = str(para) + "\n \n Questions:\n" + str(question) + "__" + str(answerA) + "__" + str(
+        answerB) + "__" + str(answerC) + "__" + str(answerD)
+    context['result'] = incom_text.incomplete_text(data_input)
+    return render(request, 'automation/result.html', context)
