@@ -47,7 +47,7 @@ def home(request):
     try:
         user_name = request.user.username
         # chatroom = user_name + str(request.user.id)
-        chatroom = "Test1"
+        chatroom = "Test5"
         pnconfig = PNConfiguration()
         pnconfig.publish_key = 'pub-c-f64ce868-88ba-4540-8cc2-68e2639c0a99'
         pnconfig.subscribe_key = 'sub-c-925f0596-c5e1-11ec-b36c-a6fdca316470'
@@ -617,7 +617,7 @@ def my_publish_callback(envelope, status):
 def chat(request):
     user_name = request.user.username
     # chatroom = user_name + str(request.user.id)
-    chatroom = "Test1"
+    chatroom = "Test5"
     pnconfig = PNConfiguration()
     pnconfig.publish_key = 'pub-c-f64ce868-88ba-4540-8cc2-68e2639c0a99'
     pnconfig.subscribe_key = 'sub-c-925f0596-c5e1-11ec-b36c-a6fdca316470'
@@ -646,7 +646,7 @@ def chat(request):
 def send(request):
     user_name = request.user.username
     # chatroom = user_name + str(request.user.id)
-    chatroom = "Test1"
+    chatroom = "Test5"
     pnconfig = PNConfiguration()
     pnconfig.publish_key = 'pub-c-f64ce868-88ba-4540-8cc2-68e2639c0a99'
     pnconfig.subscribe_key = 'sub-c-925f0596-c5e1-11ec-b36c-a6fdca316470'
@@ -658,7 +658,8 @@ def send(request):
     message = request.POST.get('message')
     msg_object = dict(user_name=user_name, message=message)
     pn.publish().channel(channel).message(msg_object).pn_async(my_publish_callback)
-    update_messages(user_name, message)
+    global temp
+    temp.append(user_name + ": " + message)
     context = {
         'username': user_name,
         'chats': temp
@@ -677,7 +678,7 @@ def get_messages(request, user_name):
 
 def get_more_messages(request, user_name):
     # chatroom = user_name + str(request.user.id)
-    chatroom = "Test1"
+    chatroom = "Test5"
     pnconfig = PNConfiguration()
     pnconfig.publish_key = 'pub-c-f64ce868-88ba-4540-8cc2-68e2639c0a99'
     pnconfig.subscribe_key = 'sub-c-925f0596-c5e1-11ec-b36c-a6fdca316470'
@@ -709,12 +710,3 @@ def get_more_messages(request, user_name):
         'chats': temp
     }
     return JsonResponse({"messages":context})
-
-
-def update_messages(user_name, new_messages):
-    global temp
-    temp1 = temp
-    for i in range(0, len(temp1) - 1):
-        temp1[i] = temp1[i + 1]
-    temp1[len(temp1) - 1] = user_name + ": " + str(new_messages)
-    temp = temp1
