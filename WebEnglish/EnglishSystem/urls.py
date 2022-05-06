@@ -51,4 +51,5 @@ urlpatterns = [
     path('chat/',views.chat,name="chat-page"),
     path('send/',views.send,name="send"),
     path('getMessages/<str:user_name>/', views.get_messages, name='getMessages'),
+    path('getMoreMessages/<str:user_name>/', views.get_more_messages, name='getMoreMessages'),
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

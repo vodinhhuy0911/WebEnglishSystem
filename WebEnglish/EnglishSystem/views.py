@@ -21,6 +21,10 @@ from .forms import RegistrationForm
 from .source import main, reading_compre, incom_text
 
 temp = []
+temp_more = []
+max_history_chat = 0
+start_timetoken = 0
+
 def context_data():
     context = {
         'site_name': 'Learning English',
@@ -50,14 +54,17 @@ def home(request):
         pnconfig.uuid = user_name
         pn = PubNub(pnconfig)
         channel = chatroom
-
         def my_fetch_messages_callback(envelope, status):
             temp1 = []
+            count = 0
+            global start_timetoken, temp
             for msg in envelope.channels[channel]:
+                if count == 0:
+                    start_timetoken = int(msg.timetoken)
+                count += 1
                 temp1.append(msg.message["user_name"] + ": " + str(msg.message["message"]))
-            global temp
             temp = temp1
-        pn.fetch_messages().channels(channel).count(10).end(15343325004275466).pn_async(my_fetch_messages_callback)
+        pn.fetch_messages().channels(channel).count(20).pn_async(my_fetch_messages_callback)
     except AssertionError:
         pass
     return render(request, 'home.html', context)
@@ -619,12 +626,15 @@ def chat(request):
     channel = chatroom
 
     def my_fetch_messages_callback(envelope, status):
-        temp1 = []
-        for msg in envelope.channels[channel]:
-            temp1.append(msg.message["user_name"] + ": " + str(msg.message["message"]))
-        global temp
-        temp = temp1
-    pn.fetch_messages().channels(channel).count(10).end(15343325004275466).pn_async(my_fetch_messages_callback)
+        if not status.is_error():
+            temp1 = []
+            global temp
+            for msg in envelope.channels[channel]:
+                temp1.append(msg.message["user_name"] + ": " + str(msg.message["message"]))
+            temp = temp1
+        else:
+            print(status.StatusCode + "..." + status.ErrorData)
+    pn.fetch_messages().channels(channel).count(20).pn_async(my_fetch_messages_callback)
     global temp
     context = {
         'username':user_name,
@@ -660,6 +670,42 @@ def get_messages(request, user_name):
     global temp
     context = {
         'username':user_name,
+        'chats': temp
+    }
+    return JsonResponse({"messages":context})
+
+
+def get_more_messages(request, user_name):
+    # chatroom = user_name + str(request.user.id)
+    chatroom = "Test1"
+    pnconfig = PNConfiguration()
+    pnconfig.publish_key = 'pub-c-f64ce868-88ba-4540-8cc2-68e2639c0a99'
+    pnconfig.subscribe_key = 'sub-c-925f0596-c5e1-11ec-b36c-a6fdca316470'
+    pnconfig.uuid = user_name
+    pn = PubNub(pnconfig)
+    channel = chatroom
+
+    def my_fetch_messages_callback(envelope, status):
+        if not status.is_error():
+            temp1 = []
+            count = 0
+            global start_timetoken, temp_more, temp
+            for msg in envelope.channels[channel]:
+                if count == 0:
+                    start_timetoken = int(msg.timetoken)
+                count += 1
+                temp1.append(msg.message["user_name"] + ": " + str(msg.message["message"]))
+            temp_more = temp1
+            temp = temp_more + temp
+        else:
+            pass
+    try:
+        pn.fetch_messages().channels(channel).count(20).start(start_timetoken).pn_async(my_fetch_messages_callback)
+    except AssertionError:
+        pass
+    global temp
+    context = {
+        'username': user_name,
         'chats': temp
     }
     return JsonResponse({"messages":context})

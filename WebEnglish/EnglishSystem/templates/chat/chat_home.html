@@ -7,8 +7,9 @@
             <div class="container-fluid">
                 <div class="position-relative">
                     <div class="px-2 pt-4 pb-1 border border-gray-200">
-                        <div id="test"></div>
-                        <div id="chat-holder" class="" style="max-height:500px; overflow:auto">
+                        <div class="text-center text-muted" id="load_more">Loading more old messages</div>
+                        <div id="chat-holder" class="" style="height:400px;   overflow: auto;">
+
 <!--                            <div class="text-center text-muted d-none" id="load_more">Loading more old messages</div>-->
 <!--                            <div class="text-center text-muted d-none" id="no_load">You Have Reach the oldest message</div>-->
                         </div>
@@ -40,21 +41,22 @@ myInterval = setInterval(function(){
             url : "/getMessages/{{username}}/",
             success: function(data){
                 $("#chat-holder").empty();
-                for (var key in data)
+                for (var key in data){
                     for(var i in data[key].chats){
                         var temp="<div class='chat'><b>"+ data[key].chats[i].split(":")[0] +":</b>" + data[key].chats[i].split(":")[1]+"</div>";
                         $("#chat-holder").append(temp);
                     }
+                }
             },
             error: function(response){
                 alert('An error occurred')
             }
         });
-    }, 500);
+    }, 1000);
 $(document).ready(function(){
     myInterval
+    $('#chat-holder').animate({ scrollTop: $(document).height() }, 1000);
 })
-
 $(document).on('submit','#form-message',function(e){
     e.preventDefault();
     $.ajax({
@@ -70,6 +72,29 @@ $(document).on('submit','#form-message',function(e){
     });
     document.getElementById('message').value = ''
   });
+$('#chat-holder').on('scroll', function() {
+    var scrollTop = $(this).scrollTop() >= 0 ? ($(this).scrollTop()) : -$(this).scrollTop()
+    if ((scrollTop + 19) < ($(this)[0].scrollHeight - $(this).outerHeight())) {
+        $.ajax({
+            type: 'GET',
+            url : "/getMoreMessages/{{username}}/",
+            success: function(data){
+                setTimeout(() => {
+                    $("#chat-holder").empty();
+                    for (var key in data){
+                        for(var i in data[key].chats){
+                            var temp="<div class='chat'><b>"+ data[key].chats[i].split(":")[0] +":</b>" + data[key].chats[i].split(":")[1]+"</div>";
+                            $("#chat-holder").append(temp);
+                        }
+                    }
+                }, 2000)
+            },
+            error: function(response){
+                alert('An error occurred')
+            }
+        });
+    }
+})
 </script>
 
 {% endblock content %}
