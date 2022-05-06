@@ -7,7 +7,6 @@
             <div class="container-fluid">
                 <div class="position-relative">
                     <div class="px-2 pt-4 pb-1 border border-gray-200">
-                        <div class="text-center text-muted" id="load_more">Loading more old messages</div>
                         <div id="chat-holder" class="" style="height:400px;   overflow: auto;">
 
 <!--                            <div class="text-center text-muted d-none" id="load_more">Loading more old messages</div>-->
@@ -42,8 +41,14 @@ myInterval = setInterval(function(){
             success: function(data){
                 $("#chat-holder").empty();
                 for (var key in data){
+                    if (data[key].loadmore === 1)
+                        $("#chat-holder").append("<div class='text-center text-muted' id='load_more'>Loading more old messages</div>")
                     for(var i in data[key].chats){
-                        var temp="<div class='chat'><b>"+ data[key].chats[i].split(":")[0] +":</b>" + data[key].chats[i].split(":")[1]+"</div>";
+                        var temp = ""
+                        if(data[key].chats[i].split(":")[0] == data[key].username)
+                            temp = "<div class='chat'><b>"+ data[key].chats[i].split(":")[0] +":</b><p style='width:35%;'>" + data[key].chats[i].split(":")[1]+"</p></div>";
+                        else
+                            temp = "<div class='chat'><b>"+ data[key].chats[i].split(":")[0] +":</b><p style='width:35%;'>" + data[key].chats[i].split(":")[1]+"</p></div>";
                         $("#chat-holder").append(temp);
                     }
                 }
@@ -83,7 +88,11 @@ $('#chat-holder').on('scroll', function() {
                     $("#chat-holder").empty();
                     for (var key in data){
                         for(var i in data[key].chats){
-                            var temp="<div class='chat'><b>"+ data[key].chats[i].split(":")[0] +":</b>" + data[key].chats[i].split(":")[1]+"</div>";
+                            var temp = ""
+                            if(data[key].chats[i].split(":")[0] == data[key].username)
+                                temp = "<div class='chat'><b>"+ data[key].chats[i].split(":")[0] +":</b><p style='width:35%;'>" + data[key].chats[i].split(":")[1]+"</p></div>";
+                            else
+                                temp = "<div class='chat'><b>"+ data[key].chats[i].split(":")[0] +":</b><p style='width:35%;'>" + data[key].chats[i].split(":")[1]+"</p></div>";
                             $("#chat-holder").append(temp);
                         }
                     }

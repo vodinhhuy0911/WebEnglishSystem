@@ -22,7 +22,7 @@ from .source import main, reading_compre, incom_text
 
 temp = []
 temp_more = []
-max_history_chat = 0
+loadmore = 0
 start_timetoken = 0
 
 def context_data():
@@ -47,7 +47,7 @@ def home(request):
     try:
         user_name = request.user.username
         # chatroom = user_name + str(request.user.id)
-        chatroom = "Test5"
+        chatroom = "Test1"
         pnconfig = PNConfiguration()
         pnconfig.publish_key = 'pub-c-f64ce868-88ba-4540-8cc2-68e2639c0a99'
         pnconfig.subscribe_key = 'sub-c-925f0596-c5e1-11ec-b36c-a6fdca316470'
@@ -57,13 +57,15 @@ def home(request):
         def my_fetch_messages_callback(envelope, status):
             temp1 = []
             count = 0
-            global start_timetoken, temp
+            global start_timetoken, temp, loadmore
             for msg in envelope.channels[channel]:
                 if count == 0:
                     start_timetoken = int(msg.timetoken)
                 count += 1
                 temp1.append(msg.message["user_name"] + ": " + str(msg.message["message"]))
             temp = temp1
+            if(len(temp) > 20):
+                loadmore = 1
         pn.fetch_messages().channels(channel).count(20).pn_async(my_fetch_messages_callback)
     except AssertionError:
         pass
@@ -617,7 +619,7 @@ def my_publish_callback(envelope, status):
 def chat(request):
     user_name = request.user.username
     # chatroom = user_name + str(request.user.id)
-    chatroom = "Test5"
+    chatroom = "Test1"
     pnconfig = PNConfiguration()
     pnconfig.publish_key = 'pub-c-f64ce868-88ba-4540-8cc2-68e2639c0a99'
     pnconfig.subscribe_key = 'sub-c-925f0596-c5e1-11ec-b36c-a6fdca316470'
@@ -628,10 +630,14 @@ def chat(request):
     def my_fetch_messages_callback(envelope, status):
         if not status.is_error():
             temp1 = []
-            global temp
+            global temp, loadmore
             for msg in envelope.channels[channel]:
                 temp1.append(msg.message["user_name"] + ": " + str(msg.message["message"]))
             temp = temp1
+            if len(temp) > 20:
+                loadmore = 1
+            else:
+                loadmore = 0
         else:
             print(status.StatusCode + "..." + status.ErrorData)
     pn.fetch_messages().channels(channel).count(20).pn_async(my_fetch_messages_callback)
@@ -646,7 +652,7 @@ def chat(request):
 def send(request):
     user_name = request.user.username
     # chatroom = user_name + str(request.user.id)
-    chatroom = "Test5"
+    chatroom = "Test1"
     pnconfig = PNConfiguration()
     pnconfig.publish_key = 'pub-c-f64ce868-88ba-4540-8cc2-68e2639c0a99'
     pnconfig.subscribe_key = 'sub-c-925f0596-c5e1-11ec-b36c-a6fdca316470'
@@ -668,17 +674,22 @@ def send(request):
 
 
 def get_messages(request, user_name):
-    global temp
+    global temp, loadmore
+    if len(temp) > 20:
+        loadmore = 1
+    else:
+        loadmore = 0
     context = {
         'username':user_name,
-        'chats': temp
+        'chats': temp,
+        'loadmore': loadmore
     }
     return JsonResponse({"messages":context})
 
 
 def get_more_messages(request, user_name):
     # chatroom = user_name + str(request.user.id)
-    chatroom = "Test5"
+    chatroom = "Test1"
     pnconfig = PNConfiguration()
     pnconfig.publish_key = 'pub-c-f64ce868-88ba-4540-8cc2-68e2639c0a99'
     pnconfig.subscribe_key = 'sub-c-925f0596-c5e1-11ec-b36c-a6fdca316470'
