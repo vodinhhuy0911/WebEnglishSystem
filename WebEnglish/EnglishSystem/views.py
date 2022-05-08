@@ -384,7 +384,6 @@ def submission_result(request, pk=None):
 #     return render(request, 'quiz/login.html', {"form": form, "title": title})
 
 
-
 def register(request):
     title = "Create account"
     if request.method == 'POST':
@@ -414,7 +413,6 @@ def error_500(request):
     return render(request, 'quiz/error_500.html', data)
 
 
-
 #AUTOMATION
 def post_incomplete_sentences(request):
 
@@ -424,6 +422,7 @@ def post_incomplete_sentences(request):
     context = {}
     context['page_title'] = 'Incomplete Senteces'
     return render(request,'automation/incomplete-sentences.html',context)
+
 
 def result_incomplete_senteces(request):
     context = {}
@@ -447,46 +446,58 @@ def result_incomplete_senteces(request):
 @login_required()
 def test(request):
     if request.method == 'POST':
-        question_pk = request.POST.getlist('question_pk')
-        result = 0.0
-        for pk in question_pk:
-            choice_pk = request.POST.get('choice_pk-'+str(pk))
-            is_answer = Choice.objects.get(pk=choice_pk)
-            if is_answer.is_correct == True:
-                mask = Question.objects.get(pk=pk)
-                result += float(mask.maximum_marks)
-        context = {
-            'question_pk':question_pk,
-            'link': ' /quiz',
-            'result':result
-        }
-        return render(request,'quiz/result.html',context)
+        if 'submit' in request.POST:
+            question_pk = request.POST.getlist('question_pk')
+            result = 0.0
+            for pk in question_pk:
+                choice_pk = request.POST.get('choice_pk-'+str(pk))
+                is_answer = Choice.objects.get(pk=choice_pk)
+                if is_answer.is_correct == True:
+                    mask = Question.objects.get(pk=pk)
+                    result += float(mask.maximum_marks)
+            context = {
+                'question_pk':question_pk,
+                'link': ' /quiz',
+                'result':result
+            }
+            return render(request,'quiz/result.html',context)
+        if 'help' in request.POST:
+            question = []
+            question.append(Question.objects.get(pk=request.POST.get('question_pk')))
+            input = request.POST.get('input')
+            result = []
+            result.append(main.bigram_MaskedLanguageModel(input))
+            context = {
+                'list_question': zip(question[:1], result),
+                'flag': 1
+            }
+            return render(request, 'quiz/test.html', context)
     else:
         list_question = list(Question.objects.all())
         random.shuffle(list_question)
         result = []
         for question in list_question[:1]:
             c = list(Choice.objects.filter(question = question))
-            input = question.html+ "___" + c[0].html+ "___" + c[1].html+ "___"+ c[2].html+ "___"+ c[3].html
-            # result.append("a")
-            result.append(main.bigram_MaskedLanguageModel(input))
-            # list_percent =
+            input = question.html + "___" + c[0].html + "___" + c[1].html + "___"+ c[2].html + "___" + c[3].html
+            result.append(input)
+            # result.append(main.bigram_MaskedLanguageModel(input))
         context = {
-            'list_question': zip(list_question[:1],result)
-            # 'input':listInput
+            'list_question': zip(list_question[:1],result),
+            # 'list_question': zip(list_question[:1])
+            'flag':0
         }
         # print(context["input"][0])
         return render(request, 'quiz/test.html', context=context)
 
 
 def auto_incomplete_sentences(request):
-
     # data ={}
     # return render(request,'automation/incomplete-sentences.html',data)
 
     context = {}
     context['page_title'] = 'Reading Comprehension'
     return render(request,'automation/reading-comprehension.html',context)
+
 
 def auto_incomplete_text(request):
 
@@ -496,6 +507,7 @@ def auto_incomplete_text(request):
     context = {}
     context['page_title'] = 'Incomplete Text'
     return render(request,'automation/reading-comprehension.html',context)
+
 
 def result_reading_comprehension(request):
     context = {}
@@ -509,7 +521,6 @@ def result_reading_comprehension(request):
     data_input = str(para) + "\n \n Questions:\n" + str(question) + "__" + str(answerA) + "__" + str(answerB) + "__" + str(answerC) + "__" + str(answerD)
     context['result'] = reading_compre.reading_comprehension(data_input)
     return render(request, 'automation/result.html', context)
-
 
 
 @login_required()
@@ -552,8 +563,6 @@ def test_reading_comprehension(request):
         return render(request, 'quiz/test_reading_comprehension.html', context=context)
 
 
-
-
 @login_required()
 def test_incomplete_text(request):
     if request.method == 'POST':
@@ -593,6 +602,7 @@ def test_incomplete_text(request):
         }
         # print(context["input"][0])
         return render(request, 'quiz/test_reading_comprehension.html', context=context)
+
 
 def result_incomplete_text(request):
     context = {}

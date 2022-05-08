@@ -18,33 +18,49 @@
     <h3 class="text-info">{{ question.html|safe }}</h3>
     <form class="form" action="" method="post">
         {% csrf_token %}
-        <input type="hidden" name="question_pk" value="{{ question.pk }}">
+        <input type="hidden" name="question_pk" id="question_pk" value="{{ question.pk }}">
+        <input type="hidden" name="input" id="input" value="{{ input }}">
         {% for choice in question.choices.all %}
           <div class="form-check mx-4">
             <input class="form-check-input" type="radio" name="choice_pk-{{question.pk}}" id="choice-{{ forloop.counter }}" value="{{ choice.pk }}">
             <label class="form-check-label" for="choice-{{ forloop.counter }}">
               {{ choice.html|safe }}
             </label>
-
           </div>
 
         {% endfor %}
-
-        <p   style="display: none;" id ="show-answer-{{question.pk}}" class ="hide"> {{ input}}</p>
-        <div
-          onclick="show({{question.pk}})"   id="show-percent-answer"  class="btn btn-info btn-sm">Help</div>
+        {% if flag == 1 %}
+            <p id ="show-answer-{{question.pk}}" class ="hide"> {{ input}}</p>
+        {% endif %}
         {% endfor %}
-        <input class="btn btn-info btn-lg" type="submit" value="Submit">
+        <button id="show-percent-answer" class="btn btn-info btn-lg" type="submit" name="help">Help</button>
+        <button class="btn btn-info btn-lg" type="submit" name="submit">Submit</button>
     </form>
   </div>
 </div>
 {% endif %}
 {% block javascripts %}
 <script>
-    function show(id)
-    {
-        document.getElementById("show-answer-"+id).style.display="block";
-    }
+$(document).ready(function(){
+    alert($('#question_pk').val())
+})
+    $(function(){
+      let getHelp = function(){
+        $.ajax({
+          type: 'POST',
+          url : "/test/",
+          data:{
+              question_pk:$('#question_pk').val(),
+              input:$('#input').val(),
+              csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+          },
+          success : function (data) {
+
+          }
+        });
+      }
+      $("#show-percent-answer").click(getHelp);
+    });
 </script>
 {% endblock javascripts %}
 {% endblock content %}
