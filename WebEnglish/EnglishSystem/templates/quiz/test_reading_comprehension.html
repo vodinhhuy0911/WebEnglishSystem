@@ -17,14 +17,12 @@
     {%for paragraph in list_para %}
       <p class = "big-box yellow-box">{{paragraph.content|safe}} </p>
       <form class="form" action="" method="post">
-<input type="hidden" name="paragraph_pk" value="{{ paragraph.pk }}">
-        {%for question in list_question %}
+          <input type="hidden" name="paragraph_pk" value="{{ paragraph.pk }}">
+        {%for question,result in list_question %}
 
             {% csrf_token %}
-
-
             <h4 class="text-info">{{ question.html|safe }}</h4>
-
+            <input type="hidden" name="result" id="result-{{question_pk}}" value="{{ result }}">
             <input type="hidden" name="question_pk" value="{{ question.pk }}">
             {% for choice in question.choices.all %}
               <div class="form-check mx-4">
@@ -36,23 +34,37 @@
               </div>
 
             {% endfor %}
-
-<!--            <p   style="display: none;" id ="show-answer-{{question.pk}}" class ="hide"> {{ result}}</p>-->
-            <div
-              onclick="show({{question.pk}})"   id="show-percent-answer"  class="btn btn-info btn-sm">Help</div>
+            {% if flag == 1  %}
+            <p id ="show-answer-{{question.pk}}" class ="hide"> {{ result}}</p>
+            {% endif %}
+            <div id="holder"></div>
+            <button id="{{question.pk}}" class="get-help btn btn-info btn-lg" type="submit" name="help">Help</button>
             {% endfor %}
-        <input class="btn btn-info btn-lg" type="submit" value="Submit">
       {% endfor %}
+          <br><br><br>
+          <button class="btn btn-info btn-lg" type="submit" name="submit">Submit</button>
     </form>
   </div>
 </div>
 {% endif %}
 {% block javascripts %}
 <script>
-    function show(id)
-    {
-        document.getElementById("show-answer-"+id).style.display="block";
-    }
+$('.get-help').click(function () {
+    var temp = "<input type='hidden' name='qid' id='qid' value='" + this.id + "'>";
+    $("#holder").append(temp);
+    $.ajax({
+          type: 'POST',
+          url : "/test_reading_comprehension/",
+          data:{
+              qid:$('#qid').val(),
+              paragraph_pk:paragraph.pk,
+              csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+          },
+          success : function (data) {
+
+          }
+        });
+});
 </script>
 {% endblock javascripts %}
 {% endblock content %}

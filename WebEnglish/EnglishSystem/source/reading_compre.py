@@ -25,104 +25,95 @@ def get_question(q_list):
 def question_classification(question):
     question = str(question).lower()
     # Exception Question
-    if question.find("except") != -1 or question.find("excepts") != -1:
-        # print(question)
+    if question.find("except") != -1 or question.find("excepts") != -1 or question.find("not true") == -1 and question.find("not") != -1:
         return 1
-
     # Incomplete Question
-    elif question.find("-------") != -1:
-        # print(question + " ")
-        return 2
-    elif question[len(question) - 1] not in '''!?.''':
-        # if question.find("closest") == -1 and question.find("meaning") == -1 and question.find("refers to") == -1:
-        #     print(question + " dytdg")
-        # else:
-        #     print("bbb")
-        return 3
-
-    # Complete Question
     else:
-        # print('aaaa')
-        return 4
+        return 2
 
 
-def get_final_answer(answer_list, answers, maxrange):
+def get_final_answer(answer_list, answers):
     final_answers = [0.0, 0.0, 0.0, 0.0]
+    total_score = 0
     max_score = 0
-    fa = ""
+    min_score = 1
     for answer in answers:
         if nlp(answer['answer']).vector_norm:
             sum_similarity = 0
-            for temp0 in range(0, maxrange):
+            for temp0 in range(0, 4):
                 sum_similarity += float(nlp(answer_list[temp0]).similarity(nlp(answer['answer'])))
             if sum_similarity == 0:
                 sum_similarity = 1
-            for temp1 in range(0, maxrange):
+            for temp1 in range(0, 4):
                 if final_answers[temp1] < answer['score'] * float(nlp(answer_list[temp1]).similarity(nlp(answer['answer']))) / sum_similarity:
                     final_answers[temp1] = answer['score'] * float(nlp(answer_list[temp1]).similarity(nlp(answer['answer']))) / sum_similarity
                 if max_score <= final_answers[temp1]:
                     max_score = final_answers[temp1]
-                    if temp1 == 0:
-                        fa = "A. "
-                    elif temp1 == 1:
-                        fa = "B. "
-                    elif temp1 == 2:
-                        fa = "C. "
-                    else:
-                        fa = "D. "
-                    # fa += answer_list[temp1]
-    return  final_answers
-    # return "Answer: " + fa
+                if min_score >= final_answers[temp1]:
+                    min_score = final_answers[temp1]
+    for i in final_answers:
+        total_score += i
+    for j in range(0, 4):
+        if max_score == final_answers[j]:
+            final_answers[j] += (3 * (max_score - min_score))
+        else:
+            final_answers[j] -= (max_score - min_score)
+        final_answers[j] = format(final_answers[j] * 100 / total_score, ".2f")
+    return final_answers
+
 
 def get_exception_question_answer(text, questions, answer_list, question_processor, passage_retriever):
-    final_answers = [0.0, 0.0, 0.0, 0.0]
     SPACY_MODEL = os.environ.get('SPACY_MODEL', 'en_core_web_lg')
     nlp = spacy.load(SPACY_MODEL)
     passage_retriever.fit([text])
     questions = questions.lower().replace("excepts", "").replace("except", "")
     question = question_processor.generate_question(questions)
     passages = passage_retriever.most_similar(question)
-    final_ans = 0
-    step = 0
-    min = 1
-    for ans in answer_list:
+
+    final_answers = [0.0, 0.0, 0.0, 0.0]
+    total_score = 0
+    max_score = 0
+    min_score = 1
+    for i in range(0,4):
+        min = 1
         for p in passages:
             for sents in nlp(p).sents:
-                # print(float(nlp(sents.text).similarity(nlp(question + " " + ans))))
-                if min >= float(nlp(sents.text).similarity(nlp(question + " " + ans))):
-                    min = float(nlp(sents.text).similarity(nlp(question + " " + ans)))
+                temp = float(nlp(sents.text).similarity(nlp(question + " " + answer_list[i])))
+                if temp >= max_score:
+                    max_score = temp
+                if min >= temp:
+                    min = temp
+        final_answers[i] = min
+        if min <= min_score:
+            min_score = min
 
-                    final_answers[answer_list.index(sents)] = float(nlp(sents.text).similarity(nlp(question + " " + ans)))
-                    final_ans = step
-        step += 1
-    if final_ans == 0:
-        fa = "A. "
-    elif final_ans == 1:
-        fa = "B. "
-    elif final_ans == 2:
-        fa = "C. "
-    else:
-        fa = "D. "
+    for i in final_answers:
+        total_score += i
+    for j in range(0, 4):
+        if min_score == final_answers[j]:
+            final_answers[j] += (3 * (max_score - min_score))
+        else:
+            final_answers[j] -= (max_score - min_score)
+        final_answers[j] = format(final_answers[j] * 100 / total_score, ".2f")
     return final_answers
-    # return "Answer: " + fa + "\n"
 
 
 def show(list_result):
     final_resul = ["","","",""]
-    for ind in list_result:
-        score = ind / sum(list_result) * 100
-        final_resul[list_result.index(ind)] = chr(65 + list_result.index(ind)) + ": " + str(round(score,4)) + "%"
+    for j in range(0, 4):
+        final_resul[j] = chr(65 + j) + ": " + str(list_result[j]) + "%"
     return final_resul
+
 
 SPACY_MODEL = os.environ.get('SPACY_MODEL', 'en_core_web_lg')
 QA_MODEL = os.environ.get('QA_MODEL', 'deepset/roberta-base-squad2')
 nlp = spacy.load(SPACY_MODEL)
 
+
 def reading_comprehension(text):
     question_processor = QuestionProcessor(nlp)
     passage_retriever = PassageRetrieval(nlp)
     answer_extractor = AnswerExtractor(QA_MODEL, QA_MODEL)
-    flag = True
     context = get_context(text)
     question_list = get_question_list(text)
     doc = [context]
@@ -158,5 +149,4 @@ def reading_comprehension(text):
             question = question_processor.generate_question(question)
             passages = passage_retriever.most_similar(question)
             answers = answer_extractor.extract(question, passages)
-            return show(get_final_answer(answer_list, answers, max_range))
-        flag = False
+            return show(get_final_answer(answer_list, answers))

@@ -42,7 +42,6 @@
 {% block javascripts %}
 <script>
 $(document).ready(function(){
-})
     $(function(){
       let getHelp = function(){
         $.ajax({
@@ -60,6 +59,7 @@ $(document).ready(function(){
       }
       $("#show-percent-answer").click(getHelp);
     });
+})
 </script>
 {% endblock javascripts %}
 {% endblock content %}

@@ -526,22 +526,46 @@ def result_reading_comprehension(request):
 @login_required()
 def test_reading_comprehension(request):
     if request.method == 'POST':
-        paragraph_pk = request.POST.get('paragraph_pk')
-        question = request.POST.getlist('question_pk')
-        print(question)
-        result = 0.0
-        for id in question:
-            choice_pk = request.POST.get('choice_pk-'+str(id))
-            print(choice_pk)
-            is_answer = Choice.objects.get(pk=choice_pk)
-            if is_answer.is_correct == True:
-                mask = Question.objects.get(pk=id)
-                result += float(mask.maximum_marks)
-        context = {
-            'result':result,
-            'link': ' /test-reading-comprehension'
-        }
-        return render(request,'quiz/result.html',context)
+        if 'submit' in request.POST:
+            paragraph_pk = request.POST.get('paragraph_pk')
+            question = request.POST.getlist('question_pk')
+            print(question)
+            result = 0.0
+            for id in question:
+                choice_pk = request.POST.get('choice_pk-'+str(id))
+                print(choice_pk)
+                is_answer = Choice.objects.get(pk=choice_pk)
+                if is_answer.is_correct == True:
+                    mask = Question.objects.get(pk=id)
+                    result += float(mask.maximum_marks)
+            context = {
+                'result':result,
+                'link': ' /test-reading-comprehension'
+            }
+            return render(request,'quiz/result.html',context)
+        if 'help' in request.POST:
+            list_para = []
+            result = []
+            list_para.append(Paragraph.objects.get(pk=request.POST.get('paragraph_pk')))
+            list_question = []
+            for para in list_para[:1]:
+                # list_question.append(Question.objects.get(pk=request.POST.get('qid')))
+                list_question = list(Question.objects.filter(paragraph=para))
+                for question in list_question:
+                    c = list(Choice.objects.filter(question=question))
+                    input = para.content + "\n\nQuestions:\n" + question.html + "__" + c[0].html + "__" + c[1].html + "__" + \
+                            c[2].html + "__" + c[3].html
+                    if question == Question.objects.get(pk=request.POST.get('qid')):
+                        print(request.POST.get('qid'))
+                        result.append(reading_compre.reading_comprehension(input))
+                    else:
+                        result.append(" ")
+            context = {
+                'list_para': (list_para[:1]),
+                'list_question': zip(list_question, result),
+                'flag': 1
+            }
+            return render(request, 'quiz/test_reading_comprehension.html', context=context)
     else:
         list_para = list(Paragraph.objects.filter(type='1'))
         random.shuffle(list_para)
@@ -552,14 +576,13 @@ def test_reading_comprehension(request):
             for question in list_question:
                 c = list(Choice.objects.filter(question = question))
                 input = para.content + "\n\nQuestions:\n" + question.html+ "__" + c[0].html+ "__" + c[1].html+ "__"+ c[2].html+ "__"+ c[3].html
-                result.append(reading_compre.reading_comprehension(input))
-            # list_percent =
+                result.append(input)
         print(list_para)
         context = {
             'list_para': (list_para[:1]),
-            'list_question': zip(list_question,result)
+            'list_question': zip(list_question,result),
+            'flag':0
         }
-        # print(context["input"][0])
         return render(request, 'quiz/test_reading_comprehension.html', context=context)
 
 
