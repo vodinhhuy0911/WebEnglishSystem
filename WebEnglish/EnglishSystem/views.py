@@ -457,7 +457,7 @@ def test(request):
                     result += float(mask.maximum_marks)
             context = {
                 'question_pk':question_pk,
-                'link': ' /quiz',
+                'link': ' /test',
                 'result':result
             }
             return render(request,'quiz/result.html',context)
