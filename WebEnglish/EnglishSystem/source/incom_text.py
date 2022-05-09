@@ -102,15 +102,11 @@ def incomplete_text(inputQuestion):
             input += text
         question = input + "__" + listAnswer[i]
         question = question.replace(indexQuestion, '........')
-
-
-
-
         a = question.split('__')
         del a[1]
         data = ''
         for i in a:
-            data += i +'___'
+            data += i + '___'
         print(data)
         # a = question.split('__')
         a[4] = a[4].replace(' \n', '')
@@ -120,7 +116,6 @@ def incomplete_text(inputQuestion):
         # print(question)
         for x in arr:
             if x.find('.....') != -1:
-            # if x.find('-----') != -1:
                 a[0] = a[0].replace(x, '<mask>')
                 break
         # print(a[0])
@@ -144,15 +139,22 @@ def incomplete_text(inputQuestion):
             pos += 1
 
         resultBigram = bigram(data)
-        print(resultBigram)
-        print(resultMasked)
+        # print(resultBigram)
+        # print(resultMasked)
         for viTri in range(0,4):
             resultFinal[viTri] = resultBigram[viTri]*0.1 + resultMasked[viTri] * 0.9
         result_incomplete_text.append(resultFinal)
         result = a[resultFinal.index(max(resultFinal))+1]
 
-        print(chr(65 +resultFinal.index(max(resultFinal))),a[resultFinal.index(max(resultFinal))+1])
+        # print(chr(65 +resultFinal.index(max(resultFinal))),a[resultFinal.index(max(resultFinal))+1])
         print(resultFinal)
         content = content.replace(indexQuestion, result)
-    return result_incomplete_text
+        sum_result = sum(resultFinal)
+        for viTriDapAn in range(0, 4):
+            resultFinal[viTriDapAn] = resultFinal[viTriDapAn] * 100 / sum_result
+        print(sum(resultFinal))
+        percent = []
+        for viTriDapAn in range(0, 4):
+            percent.append(a[viTriDapAn + 1] + ": " + str(round(resultFinal[viTriDapAn], 4)) + "%")
+    return percent
 
