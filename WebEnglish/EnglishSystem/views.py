@@ -601,10 +601,13 @@ def test_incomplete_text(request):
             for id in question:
                 choice_pk = request.POST.get('choice_pk-'+str(id))
                 print(choice_pk)
-                is_answer = Choice.objects.get(pk=choice_pk)
-                if is_answer.is_correct == True:
-                    mask = Question.objects.get(pk=id)
-                    result += float(mask.maximum_marks)
+                try:
+                    is_answer = Choice.objects.get(pk=choice_pk)
+                    if is_answer.is_correct == True:
+                        mask = Question.objects.get(pk=id)
+                        result += float(mask.maximum_marks)
+                except:
+                    result += 0.0
             context = {
                 'result':result,
                 'link': ' /test-incomplete-text'

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'layouts/base.html' %}
 {% block title %} Let's Quiz | Submission Result {% endblock title %}
 {% block content %}
 <div class="container">
@@ -10,7 +10,7 @@
 		    <strong>Your score: </strong>
 		    {{ result }}
 		</p>
-		<a class="btn btn-info" href="{% url 'quiz' %}">Home</a>
+		<a class="btn btn-info" href="{% url 'home-page' %}">Home</a>
 		<a class="btn btn-info" href={{link}}>Next question</a>
 	</div>
 </div>

@@ -35,19 +35,12 @@
                                     <li><a href="{%url 'test-incomplete-text'%}">Incomplete Text</a></li>
                                 </ul>
                                 </li>
-                                <li><a href="{%url 'quiz'%}">Quiz</a>
                                 <li>
                                     <a href="#">Category</a>
                                 <ul class="dropdown">
                                     {% for category in categories %}
                                     <li><a href="{% url 'category-post' category.id %}">{{category}}</a></li>
                                     {% endfor %}
-                                </ul>
-                                </li>
-                                <li>
-                                    <a href="#">Excercise</a>
-                                <ul class="dropdown">
-                                    <li><a href="#">Toeic</a></li>
                                 </ul>
                                 </li>
                                 <li>
