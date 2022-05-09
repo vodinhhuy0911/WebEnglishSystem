@@ -451,10 +451,13 @@ def test(request):
             result = 0.0
             for pk in question_pk:
                 choice_pk = request.POST.get('choice_pk-'+str(pk))
-                is_answer = Choice.objects.get(pk=choice_pk)
-                if is_answer.is_correct == True:
-                    mask = Question.objects.get(pk=pk)
-                    result += float(mask.maximum_marks)
+                try:
+                    is_answer = Choice.objects.get(pk=choice_pk)
+                    if is_answer.is_correct == True:
+                        mask = Question.objects.get(pk=pk)
+                        result += float(mask.maximum_marks)
+                except:
+                    result += 0.0
             context = {
                 'question_pk':question_pk,
                 'link': ' /test',
@@ -533,10 +536,13 @@ def test_reading_comprehension(request):
             for id in question:
                 choice_pk = request.POST.get('choice_pk-'+str(id))
                 print(choice_pk)
-                is_answer = Choice.objects.get(pk=choice_pk)
-                if is_answer.is_correct == True:
-                    mask = Question.objects.get(pk=id)
-                    result += float(mask.maximum_marks)
+                try:
+                    is_answer = Choice.objects.get(pk=choice_pk)
+                    if is_answer.is_correct == True:
+                        mask = Question.objects.get(pk=id)
+                        result += float(mask.maximum_marks)
+                except:
+                    result += 0.0
             context = {
                 'result':result,
                 'link': ' /test-reading-comprehension'
@@ -602,6 +608,23 @@ def test_incomplete_text(request):
                 'link': ' /test-incomplete-text'
             }
             return render(request,'quiz/result.html',context)
+            print(question)
+            result = 0.0
+            for id in question:
+                choice_pk = request.POST.get('choice_pk-' + str(id))
+                print(choice_pk)
+                try:
+                    is_answer = Choice.objects.get(pk=choice_pk)
+                    if is_answer.is_correct == True:
+                        mask = Question.objects.get(pk=id)
+                        result += float(mask.maximum_marks)
+                except:
+                    result += 0.0
+            context = {
+                'result': result,
+                'link': ' /test-incomplete-text'
+            }
+            return render(request, 'quiz/result.html', context)
         if 'help' in request.POST:
             list_para = []
             result = []
