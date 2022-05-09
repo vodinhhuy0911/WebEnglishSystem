@@ -25,6 +25,7 @@ temp_more = []
 loadmore = 0
 start_timetoken = 0
 
+
 def context_data():
     context = {
         'site_name': 'Learning English',
@@ -307,6 +308,7 @@ def delete_comment(request, pk=None):
 
     return HttpResponse(json.dumps(resp), content_type="application/json")
 
+
 #QUIZ
 def quiz(request):
     context = {}
@@ -476,7 +478,7 @@ def test(request):
             }
             return render(request, 'quiz/test.html', context)
     else:
-        list_question = list(Question.objects.all())
+        list_question = list(Question.objects.filter(paragraph_id__isnull=True))
         random.shuffle(list_question)
         result = []
         for question in list_question[:1]:

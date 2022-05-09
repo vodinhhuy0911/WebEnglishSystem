@@ -8,15 +8,16 @@ from .forms import QuestionForm, ChoiceForm, ChoiceInlineFormset
 # Register your models here.
 # Register your models here.
 
+
 class PostForm(forms.ModelForm):
     content = forms.CharField(widget=CKEditorUploadingWidget)
     class Meta:
         model = Post
         fields = '__all__'
 
+
 class PostAdmin(admin.ModelAdmin):
     form = PostForm
-
 
 
 class ChoiceInline(admin.TabularInline):
