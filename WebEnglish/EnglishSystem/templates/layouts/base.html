@@ -70,7 +70,23 @@
             })
         </script>
 
-<script type="text/javascript">
+    </div>
+    {% endif %} {% block content %} {% endblock content %}
+    <!-- ##### Footer Area Start ##### -->
+    {% include './footer.html' %}
+    <!-- ##### Footer Area Start ##### -->
+
+    <!-- ##### All Javascript Script ##### -->
+    <!-- Popper js -->
+    <script src="{% static 'js/bootstrap/popper.min.js' %}"></script>
+    <!-- Bootstrap js -->
+    <script src="{% static 'js/bootstrap/bootstrap.min.js' %}"></script>
+    <!-- All Plugins js -->
+    <script src="{% static 'js/plugins/plugins.js' %}"></script>
+    <!-- Active js -->
+    <script src="{% static 'js/active.js' %}"></script>
+    {% block javascripts %} {% endblock javascripts %}
+    <script type="text/javascript">
   var lbplugin_event_opt={
     "extension_enable":true,"dict_type":1,
     "dbclk_event":{
@@ -99,22 +115,6 @@
     })
   }, 1e3);
 </script>
-    </div>
-    {% endif %} {% block content %} {% endblock content %}
-    <!-- ##### Footer Area Start ##### -->
-    {% include './footer.html' %}
-    <!-- ##### Footer Area Start ##### -->
-
-    <!-- ##### All Javascript Script ##### -->
-    <!-- Popper js -->
-    <script src="{% static 'js/bootstrap/popper.min.js' %}"></script>
-    <!-- Bootstrap js -->
-    <script src="{% static 'js/bootstrap/bootstrap.min.js' %}"></script>
-    <!-- All Plugins js -->
-    <script src="{% static 'js/plugins/plugins.js' %}"></script>
-    <!-- Active js -->
-    <script src="{% static 'js/active.js' %}"></script>
-    {% block javascripts %} {% endblock javascripts %}
     <script>
         $(function(){
             if($('#post-list>div').length <= 0){
