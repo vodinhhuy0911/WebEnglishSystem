@@ -122,8 +122,9 @@ def bigram_MaskedLanguageModel(inputQuestion):
     landa = 0.9
     for viTriDapAn in range(0, 4):
         resultOutput[viTriDapAn] = (resultFinal[viTriDapAn] * (1.0 - landa)) + (resultMasked[viTriDapAn] * (landa))
+    sum_score = sum(resultOutput)
     for viTriDapAn in range(0, 4):
-        resultOutput[viTriDapAn] = resultOutput[viTriDapAn]/ sum(resultOutput) *100
+        resultOutput[viTriDapAn] = resultOutput[viTriDapAn]/ sum_score *100
 
     percent = []
     for viTriDapAn in range(0,4):

@@ -29,8 +29,6 @@ start_timetoken = 0
 def context_data():
     context = {
         'site_name': 'Learning English',
-        'page': 'home',
-        'page_title': 'News Portal',
         'categories': models.Category.objects.filter(status=1).all(),
     }
     return context
@@ -41,7 +39,7 @@ def home(request):
     context = context_data()
     posts = models.Post.objects.filter(status=1).order_by('-date_created').all()
     context['page'] = 'home'
-    context['page_title'] = 'Home'
+    context['site_name'] = 'Home'
     context['latest_top'] = posts[:2]
     context['latest_bottom'] = posts[2:12]
     print(posts)
@@ -77,8 +75,6 @@ def home(request):
 def login_user(request):
     logout(request)
     resp = {"status": 'failed', 'msg': ''}
-    username = ''
-    password = ''
     if request.POST:
         username = request.POST['username']
         password = request.POST['password']
@@ -104,7 +100,7 @@ def logoutuser(request):
 @login_required
 def update_profile(request):
     context = context_data()
-    context['page_title'] = 'Update Profile'
+    context['site_name'] = 'Update Profile'
     user = User.objects.get(id=request.user.id)
     if not request.method == 'POST':
         form = forms.UpdateProfile(instance=user)
@@ -125,7 +121,7 @@ def update_profile(request):
 @login_required
 def update_password(request):
     context = context_data()
-    context['page_title'] = "Update Password"
+    context['site_name'] = "Update Password"
     if request.method == 'POST':
         form = forms.UpdatePasswords(user=request.user, data=request.POST)
         if form.is_valid():
@@ -145,7 +141,7 @@ def update_password(request):
 def profile(request):
     context = context_data()
     context['page'] = 'profile'
-    context['page_title'] = "Profile"
+    context['site_name'] = "Profile"
     return render(request, 'profile.html', context)
 
 
@@ -154,11 +150,11 @@ def manage_post(request, pk=None):
     context = context_data()
     if not pk is None:
         context['page'] = 'edit_post'
-        context['page_title'] = 'Edit Post'
+        context['site_name'] = 'Edit Post'
         context['post'] = models.Post.objects.get(id=pk)
     else:
         context['page'] = 'new_post'
-        context['page_title'] = 'New Post'
+        context['site_name'] = 'New Post'
         context['post'] = {}
 
     return render(request, 'manage_post.html', context)
@@ -199,7 +195,7 @@ def view_post(request, pk=None):
     context = context_data()
     post = models.Post.objects.get(id=pk)
     context['page'] = 'post'
-    context['page_title'] = post.title
+    context['site_name'] = post.title
     context['post'] = post
     context['latest'] = models.Post.objects.exclude(id=pk).filter(status=1).order_by('-date_created').all()[:10]
     context['comments'] = models.Comment.objects.filter(post=post).all()
@@ -243,7 +239,7 @@ def save_comment(request):
 def list_posts(request):
     context = context_data()
     context['page'] = 'all_post'
-    context['page_title'] = 'All Posts'
+    context['site_name'] = 'All Posts'
     if request.user.is_superuser:
         context['posts'] = models.Post.objects.order_by('-date_created').all()
     else:
@@ -267,7 +263,7 @@ def category_posts(request, pk=None):
 
     context['category'] = category
     context['page'] = 'category_post'
-    context['page_title'] = f'{category.name} Posts'
+    context['site_name'] = f'{category.name} Posts'
     context['posts'] = models.Post.objects.filter(status=1, category=category).all()
 
     context['latest'] = models.Post.objects.filter(status=1).order_by('-date_created').all()[:10]
@@ -387,7 +383,7 @@ def submission_result(request, pk=None):
 
 
 def register(request):
-    title = "Create account"
+    title = "Learning English"
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
@@ -396,7 +392,9 @@ def register(request):
     else:
         form = RegistrationForm()
 
-    context = {'form': form, 'title': title}
+    context = {'form': form,
+               'title': title
+               }
     return render(request, 'quiz/registration.html', context=context)
 
 
@@ -422,13 +420,13 @@ def post_incomplete_sentences(request):
     # return render(request,'automation/incomplete-sentences.html',data)
 
     context = {}
-    context['page_title'] = 'Incomplete Senteces'
+    context['site_name'] = 'Incomplete Senteces'
     return render(request,'automation/incomplete-sentences.html',context)
 
 
 def result_incomplete_senteces(request):
     context = {}
-    context['page_title'] = 'Incomplete Senteces'
+    context['site_name'] = 'Incomplete Senteces'
     if request.method == 'POST':
         question = request.POST.get('question')
         answerA = request.POST.get('answer_a')
@@ -461,6 +459,7 @@ def test(request):
                 except:
                     result += 0.0
             context = {
+                'site_name': 'Incomplete Sentence',
                 'question_pk':question_pk,
                 'link': ' /test',
                 'result':result
@@ -473,6 +472,7 @@ def test(request):
             result = []
             result.append(main.bigram_MaskedLanguageModel(input))
             context = {
+                'site_name': 'Incomplete Sentence',
                 'list_question': zip(question[:1], result),
                 'flag': 1
             }
@@ -487,6 +487,7 @@ def test(request):
             result.append(input)
             # result.append(main.bigram_MaskedLanguageModel(input))
         context = {
+            'site_name': 'Incomplete Sentence',
             'list_question': zip(list_question[:1],result),
             # 'list_question': zip(list_question[:1])
             'flag':0
@@ -500,7 +501,7 @@ def auto_incomplete_sentences(request):
     # return render(request,'automation/incomplete-sentences.html',data)
 
     context = {}
-    context['page_title'] = 'Reading Comprehension'
+    context['site_name'] = 'Reading Comprehension'
     return render(request,'automation/reading-comprehension.html',context)
 
 
@@ -510,13 +511,13 @@ def auto_incomplete_text(request):
     # return render(request,'automation/incomplete-sentences.html',data)
 
     context = {}
-    context['page_title'] = 'Incomplete Text'
+    context['site_name'] = 'Incomplete Text'
     return render(request,'automation/reading-comprehension.html',context)
 
 
 def result_reading_comprehension(request):
     context = {}
-    context['page_title'] = 'Reading Comprehension'
+    context['site_name'] = 'Reading Comprehension'
     para = request.POST.get('paragraph')
     question = request.POST.get('question')
     answerA = request.POST.get('answer_a')
@@ -546,6 +547,7 @@ def test_reading_comprehension(request):
                 except:
                     result += 0.0
             context = {
+                'site_name': 'Reading Comprehension',
                 'result':result,
                 'link': ' /test-reading-comprehension'
             }
@@ -567,6 +569,7 @@ def test_reading_comprehension(request):
                     else:
                         result.append(" ")
             context = {
+                'site_name': 'Reading Comprehension',
                 'list_para': (list_para[:1]),
                 'list_question': zip(list_question, result),
                 'flag': 1
@@ -584,6 +587,7 @@ def test_reading_comprehension(request):
                 input = para.content + "\n\nQuestions:\n" + question.html+ "__" + c[0].html+ "__" + c[1].html+ "__"+ c[2].html+ "__"+ c[3].html
                 result.append(input)
         context = {
+            'site_name': 'Reading Comprehension',
             'list_para': (list_para[:1]),
             'list_question': zip(list_question,result),
             'flag':0
@@ -609,6 +613,7 @@ def test_incomplete_text(request):
                 except:
                     result += 0.0
             context = {
+                'site_name': 'Incomplete Text',
                 'result':result,
                 'link': ' /test-incomplete-text'
             }
@@ -626,6 +631,7 @@ def test_incomplete_text(request):
                 except:
                     result += 0.0
             context = {
+                'site_name': 'Incomplete Text',
                 'result': result,
                 'link': ' /test-incomplete-text'
             }
@@ -647,6 +653,7 @@ def test_incomplete_text(request):
                     else:
                         result.append(" ")
             context = {
+                'site_name': 'Incomplete Text',
                 'list_para': (list_para[:1]),
                 'list_question': zip(list_question, result),
                 'flag': 1
@@ -664,6 +671,7 @@ def test_incomplete_text(request):
                 input = para.content + "\n\nQuestions:\n" + question.html+ "__" + c[0].html+ "__" + c[1].html+ "__"+ c[2].html+ "__"+ c[3].html
                 result.append(input)
         context = {
+            'site_name': 'Incomplete Text',
             'list_para': (list_para[:1]),
             'list_question': zip(list_question, result),
             'flag': 0
@@ -673,7 +681,7 @@ def test_incomplete_text(request):
 
 def result_incomplete_text(request):
     context = {}
-    context['page_title'] = 'Incomplete Text'
+    context['site_name'] = 'Incomplete Text'
     para = request.POST.get('paragraph')
     question = request.POST.get('question')
     answerA = request.POST.get('answer_a')
@@ -721,6 +729,7 @@ def chat(request):
     pn.fetch_messages().channels(channel).count(20).pn_async(my_fetch_messages_callback)
     global temp
     context = {
+        'site_name': 'Chat',
         'username':user_name,
         'chats': temp
     }
@@ -745,6 +754,7 @@ def send(request):
     global temp
     temp.append(user_name + ": " + message)
     context = {
+        'site_name': 'Chat',
         'username': user_name,
         'chats': temp
     }
@@ -758,6 +768,7 @@ def get_messages(request, user_name):
     else:
         loadmore = 0
     context = {
+        'site_name': 'Chat',
         'username':user_name,
         'chats': temp,
         'loadmore': loadmore
@@ -795,6 +806,7 @@ def get_more_messages(request, user_name):
         pass
     global temp
     context = {
+        'site_name': 'Chat',
         'username': user_name,
         'chats': temp
     }

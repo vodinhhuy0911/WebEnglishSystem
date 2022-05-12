@@ -44,7 +44,7 @@ class Comment(models.Model):
         return f"{self.name} - {self.post.title}"
 
 class Paragraph(TimeStampedModel):
-    content = models.TextField()
+    content = RichTextField()
     type = models.CharField(max_length=2, choices=(("1",'Reading Comprehension'), ("2",'Incomplete Text')), default=1)
     def __str__(self):
         return self.content
