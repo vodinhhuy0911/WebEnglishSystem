@@ -30,9 +30,6 @@ urlpatterns = [
     #QUIZ
     path('quiz',views.quiz,name="quiz"),
     path('user-home', views.user_home, name='user_home'),
-    path('play/', views.play, name='play'),
-    path('leaderboard/', views.leaderboard, name='leaderboard'),
-    path('submission-result/<int:pk>/', views.submission_result, name='submission_result'),
     path('register/', views.register, name='register'),
     path('test/',views.test,name="test"),
     path('test-reading-comprehension',views.test_reading_comprehension,name='test-reading-comprehension'),
@@ -41,12 +38,10 @@ urlpatterns = [
     #QUIZ
 
     path('/automation/incomplete-sentences',views.post_incomplete_sentences,name="incomplete-sentences"),
-    # path('/automation/incomplete-text',views.auto_incomplete_text,name="incomplete-text"),
 
     path('/automation/reading-comprehension',views.auto_incomplete_sentences,name="reading-comprehension"),
     path('/automation/result-reading-comprehension',views.result_reading_comprehension,name="result-reading-comprehension"),
     path('/automation/result_incomplete_sentences',views.result_incomplete_senteces,name="result_incomplete_sentences"),
-    # path('/automation/result-incomplete-text',views.result_incomplete_text,name="result-incomplete-text")
 
     path('chat/',views.chat,name="chat-page"),
     path('send/',views.send,name="send"),

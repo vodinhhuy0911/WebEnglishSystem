@@ -1,12 +1,11 @@
 from django.contrib import admin
-from .models import Category, Post, Comment, Choice, Question, QuizProfile, AttemptedQuestion, Paragraph
+from .models import Category, Post, Comment, Choice, Question, Paragraph
 from django import forms
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 
 from .forms import QuestionForm, ChoiceForm, ChoiceInlineFormset
-# Register your models here.
-# Register your models here.
+
 
 
 class PostForm(forms.ModelForm):
@@ -38,19 +37,11 @@ class QuestionAdmin(admin.ModelAdmin):
     actions = None
     form = QuestionForm
 
-    # def has_delete_permission(self, request, obj=None):
-    #     return False
 
-    # def has_change_permission(self, request, obj=None):
-    #     if obj is not None and obj.pk is not None and obj.is_published is True:
-    #         return False
-    #     return True
 
 
 admin.site.register(Question, QuestionAdmin)
-admin.site.register(AttemptedQuestion)
 admin.site.register(Choice)
-admin.site.register(QuizProfile)
 admin.site.register(Paragraph)
 admin.site.register(Category)
 admin.site.register(Post,PostAdmin)
