@@ -54,7 +54,7 @@ def get_final_answer(answer_list, answers):
     for i in final_answers:
         total_score += i
     if total_score == 0:
-        total_score = 1
+        total_score = 10
     for j in range(0, 4):
         if max_score == final_answers[j]:
             final_answers[j] += (3 * (max_score - min_score))
@@ -92,7 +92,7 @@ def get_exception_question_answer(text, questions, answer_list, question_process
     for i in final_answers:
         total_score += i
     if total_score == 0:
-        total_score = 1
+        total_score = 10
     for j in range(0, 4):
         if min_score == final_answers[j]:
             final_answers[j] += (3 * (max_score - min_score))
